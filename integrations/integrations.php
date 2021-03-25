@@ -23,6 +23,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'firstparty_marketing' => false,
 	),
 
+	'disqus-conditional-load' => array(
+			'constant_or_function' => 'DCL_VERSION',
+			'label'                => 'Disqus Conditional Load',
+			'firstparty_marketing' => false,
+	),
+
 //	'ultimate-addons-elementor' => array(
 //			'constant_or_function' => 'UAEL_FILE',
 //			'label'                => 'Ultimate Addons for Elementor',
