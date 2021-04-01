@@ -1,4 +1,7 @@
 @gridblock _height_big: calc(auto + 20px);
+#cmplz_selected_region {
+  font-size: 13px;
+}
 .cmplz-bullet {
   height: 13px;
   width: 13px;
@@ -42,7 +45,7 @@
   color: #ccc;
   font-size: 0.9em;
 }
-#cmplz-dashboard .rsssl-scroll-container {
+#cmplz-dashboard .cmplz-scroll-container {
   height: 260px;
   margin-top: 20px;
 }
@@ -114,7 +117,7 @@
   text-decoration: underline;
 }
 #cmplz-dashboard .cmplz-shortcode {
-  left: 1000px;
+  right: 10000px;
   position: absolute;
   background-color: #fff;
   padding: 0;
@@ -157,6 +160,7 @@
 }
 #cmplz-dashboard .cmplz-document select {
   width: 200px;
+  font-size: 13px;
 }
 #cmplz-dashboard .button {
   min-width: 100px;
@@ -175,7 +179,7 @@
 }
 #cmplz-dashboard .cmplz-tools-row .cmplz-last-updated-poc {
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 13px;
 }
 .cmplz-grid {
   position: relative;

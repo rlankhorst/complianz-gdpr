@@ -205,9 +205,7 @@ class cmplz_CookieBanner_Table extends WP_List_Table {
 
 		$actions = array(
 			'edit'   => '<a href="'
-			            . admin_url( 'admin.php?page=cmplz-cookiebanner&id='
-			                         . $item['ID'] ) . '">' . __( 'Edit',
-					'complianz-gdpr' ) . '</a>',
+			            . admin_url( 'admin.php?page=cmplz-cookiebanner&id=' . $item['ID'] ) . '">' . __( 'Edit', 'complianz-gdpr' ) . '</a>',
 			'delete' => '<a class="cmplz-delete-banner" data-id="' . $item['ID']
 			            . '" href="#">' . __( 'Delete', 'complianz-gdpr' )
 			            . '</a>'

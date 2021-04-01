@@ -1,1 +1,1 @@
-<span class='rsssl-progress-status rsssl-{status-class}'>{status}</span>
+<span class='cmplz-progress-status cmplz-{status-class}'>{status}</span>

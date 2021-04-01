@@ -194,7 +194,7 @@ function cmplz_add_cookiebanner_settings($fields){
                         'complianz-gdpr' ) . ' '
                     . __( 'Depending on your settings and cookies you use, there can be two or three categories. With Tag Manager you can use more, custom categories.',
                         'complianz-gdpr' ),
-
+                'help'    => cmplz_cookiebanner_category_conditional_helptext(),
                 'default'            => 'hidden',
                 'condition'          => array('type' => 'NOT optout'),
                 //setting this to true will set it always to true, as the get_cookie settings will see an empty value
@@ -315,10 +315,10 @@ function cmplz_add_cookiebanner_settings($fields){
                 'step'          => 'customization',
                 'type'          => 'borderradius',
                 'default'       => array(
-                    'top'       => '5',
-                    'right'     => '5',
-                    'bottom'    => '5',
-                    'left'      => '5',
+                    'top'       => '2',
+                    'right'     => '2',
+                    'bottom'    => '2',
+                    'left'      => '2',
                     'type'      => 'px',
                 ),
                 'label'         => __( "Border radius", 'complianz-gdpr' ),
@@ -437,35 +437,48 @@ function cmplz_add_cookiebanner_settings($fields){
 				'type'      => 'css',
 				'help'      => sprintf(__('You can add additional custom CSS here. For tips and CSS lessons, check out our %sdocumentation%s', 'complianz-gdpr'), '<a target="_blank" href="https://complianz.io/?s=css">', '</a>'),
 				'label'     => __( "Custom CSS", 'complianz-gdpr' ),
-				'default'   => '.cc-message{} /* styles for the message box */'
+				'default'   => '.cc-message{}'
+				               . "\n".' /* styles for the message box */'
 				               . "\n"
-				               . '.cc-dismiss{} /* styles for the dismiss button */'
-				               . "\n" . '.cc-btn{} /* styles for buttons */' . "\n"
-				               . '.cc-allow{} /* styles for the accept button */'
+				               . '.cc-dismiss{}'
+				               . "\n".' /* styles for the dismiss button */'
+				               . "\n" . '.cc-btn{}'
+				               . "\n".' /* styles for buttons */' . "\n"
+				               . '.cc-allow{} '
+				               . "\n".'/* styles for the accept button */'
 				               . "\n"
-				               . '.cc-accept-all{} /* styles for the accept all button */'
+				               . '.cc-accept-all{} '
+				               . "\n".'/* styles for the accept all button */'
 				               . "\n"
-				               . '.cc-window{} /* styles for the popup banner */'
+				               . '.cc-window{} '
+				               . "\n".'/* styles for the popup banner */'
 				               . "\n"
-				               . '.cc-window .cc-category{} /* styles for categories*/'
+				               . '.cc-window .cc-category{} '
+				               . "\n".'/* styles for categories*/'
 				               . "\n"
-				               . '.cc-window .cc-check{} /* styles for the checkboxes with categories */'
+				               . '.cc-window .cc-check{} '
+				               . "\n".'/* styles for the checkboxes with categories */'
 				               . "\n"
-				               . '.cc-revoke{} /* styles for the revoke / settings popup */'
+				               . '.cc-revoke{} '
+				               . "\n".'/* styles for the revoke / settings popup */'
 				               . "\n"
-				               . '.cmplz-slider-checkbox{} /* styles for the checkboxes */'
+				               . '.cmplz-slider-checkbox{} '
+				               . "\n".'/* styles for the checkboxes */'
 				               . "\n"
-				               . '.cmplz-soft-cookiewall{} /* styles for the soft cookie wall */'
+				               . '.cmplz-soft-cookiewall{} '
+				               . "\n".'/* styles for the soft cookie wall */'
                                . "\n"
                                . "\n"
                                . "/* styles for the AMP notice */"
                                . "\n"
+                               . '#cmplz-consent-ui, #cmplz-post-consent-ui {} '
+				               . "\n".'/* styles for entire banner */'
                                . "\n"
-                               . '#cmplz-consent-ui, #cmplz-post-consent-ui {} /* styles for entire banner */'
+                               . '#cmplz-consent-ui .cmplz-consent-message {} '
+				               . "\n".'/* styles for the message area */'
                                . "\n"
-                               . '#cmplz-consent-ui .cmplz-consent-message {} /* styles for the message area */'
-                               . "\n"
-                               . '#cmplz-consent-ui button, #cmplz-post-consent-ui button {} /* styles for the buttons */',
+                               . '#cmplz-consent-ui button, #cmplz-post-consent-ui button {} '
+				               . "\n".'/* styles for the buttons */',
 				'condition' => array( 'use_custom_cookie_css' => true ),
 			),
 
@@ -549,7 +562,7 @@ function cmplz_add_cookiebanner_settings($fields){
                 'label'              => __( "Dismiss cookies text",
                     'complianz-gdpr' ),
 
-                'help'               => __( 'When a users clicks this button, the message is dismissed, without activating all cookies. This can be described as a "dismiss" button or as an "activate functional cookies" only button.',
+                'help'               => __( 'This button will reject all cookies, and will dismiss the cookie banner. Only functional/necessary cookies will be allowed.',
                     'complianz-gdpr' ),
                 'condition'          => array(
                     'type' => 'NOT optout',

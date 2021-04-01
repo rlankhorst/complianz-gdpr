@@ -239,6 +239,18 @@ function cmplz_notice_statistics_script() {
 }
 add_action( 'cmplz_notice_statistics_script', 'cmplz_notice_statistics_script' );
 
+add_action('cmplz_notice_create_pages', 'cmplz_notice_custom_create_pages');
+function cmplz_notice_custom_create_pages(){
+
+	$created_pages = COMPLIANZ::$document->get_created_pages();
+	$required_pages = COMPLIANZ::$document->get_required_pages();
+	if (count($required_pages) > count($created_pages) ){
+		cmplz_sidebar_notice( __( 'You haven\'t created all required pages yet. You can add missing pages in the previous step, or create them manually with the shortcode. You can come back later to this step to add your pages to the desired menu, or do it manually via Appearance > Menu.',
+						'complianz-gdpr' )
+		);
+	}
+}
+
 function cmplz_notice_add_pages_to_menu() {
 	$created_pages = COMPLIANZ::$document->get_created_pages();
 	$pages_not_in_menu = COMPLIANZ::$document->pages_not_in_menu();
@@ -246,13 +258,22 @@ function cmplz_notice_add_pages_to_menu() {
 		$docs = array_map( 'get_the_title', $pages_not_in_menu );
 		$docs = implode( ", ", $docs );
 		cmplz_sidebar_notice( sprintf( esc_html( _n( 'The generated document %s has not been assigned to a menu yet, you can do this now, or skip this step and do it later.',
-				'The generated documents %s have not been assigned to a menu yet, you can do this now, or skip this step and do it later.',
+				'The generated documents have not been assigned to a menu yet, you can do this now, or skip this step and do it later.',
 				count( $pages_not_in_menu ), 'complianz-gdpr' ) ), $docs ),
 				'warning' );
 	} else {
 		if (count($created_pages)>0 ) {
 			cmplz_sidebar_notice( __( "Great! All your generated documents have been assigned to a menu, so you can skip this step.",
 					'complianz-gdpr' ), 'warning' );
+		}
+	}
+
+	$pages_not_in_menu = COMPLIANZ::$document->pages_not_in_menu();
+	if ( $pages_not_in_menu ) {
+		if ( cmplz_ccpa_applies() ) {
+			cmplz_sidebar_notice( sprintf( __( 'You sell personal data from your customers. This means you are required to put the "%s" page clearly visible on your homepage.',
+					'complianz-gdpr' ),
+					cmplz_us_cookie_statement_title() ) );
 		}
 	}
 }

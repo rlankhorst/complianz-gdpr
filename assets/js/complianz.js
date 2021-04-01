@@ -66,6 +66,12 @@ jQuery(document).ready(function ($) {
 	];
 
 	/**
+	 * Show manage consent area
+	 */
+	$('#cmplz-manage-consent-container-nojavascript').hide();
+	$('#cmplz-manage-consent-container').show();
+
+	/**
 	 * prevent scroll to top behaviour because of missing href tag
 	 */
 
@@ -83,6 +89,15 @@ jQuery(document).ready(function ($) {
 		ccBody.addClass('cmplz-status-' + status);
 		curClass = 'cmplz-status-' + status;
 	}
+
+	/**
+	 * This creates an API which devs can use to trigger actions in complianz.
+	 */
+	document.addEventListener('cmplz_consent_action', function (e) {
+		cmplzFireCategories( e.detail.category , true);
+		cmplzSyncCategoryCheckboxes();
+		cmplzSaveCategoriesSelection();
+	});
 
 	/**
 	 * Set placeholder image as background on the parent div, set notice, and handle height.
@@ -762,20 +777,23 @@ jQuery(document).ready(function ($) {
 			css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-accept-all {color:' + complianz.colorpalette_button_accept_text + ';background-color:' + complianz.colorpalette_button_accept_background + ';border-color:' + complianz.colorpalette_button_accept_border + '}';
 			css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-accept-all:hover{background-color:' + getHoverColour(complianz.colorpalette_button_accept_background) + '}';
 		}
+
 		if (complianz.use_categories === 'no') {
             // Accept
-            css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-allow {color:' + complianz.colorpalette_button_accept_text + ';background-color:' + complianz.colorpalette_button_accept_background + ';border-color:' + complianz.colorpalette_button_accept_border + '}';
+	            css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-allow {color:' + complianz.colorpalette_button_accept_text + ';background-color:' + complianz.colorpalette_button_accept_background + ';border-color:' + complianz.colorpalette_button_accept_border + '}';
             css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-allow:hover{background-color:' + getHoverColour(complianz.colorpalette_button_accept_background) + '}';
 		}
+
         if (complianz.use_categories === 'hidden' || complianz.use_categories === 'visible') {
             // View settings
             css += '.cc-compliance .cc-btn.cc-show-settings{color:' + complianz.colorpalette_button_settings_text + '!important;background-color:' + complianz.colorpalette_button_settings_background + '!important;border-color:' + complianz.colorpalette_button_settings_border + '!important}';
-            css += '.cc-compliance .cc-btn.cc-show-settings:hover{background-color:' + complianz.colorpalette_button_settings_background + '!important}';
+            css += '.cc-compliance .cc-btn.cc-show-settings:hover{background-color:' + getHoverColour(complianz.colorpalette_button_settings_background) + '!important}';
         }
-        if (complianz.use_categories === 'hidden' || complianz.use_categories === 'visible' || complianz.use_categories === 'legacy') {
+
+		if (complianz.use_categories === 'hidden' || complianz.use_categories === 'visible' || complianz.use_categories === 'legacy') {
             // Save settings
             css += '.cc-compliance .cc-btn.cc-save-settings{color:' + complianz.colorpalette_button_settings_text + '!important;background-color:' + complianz.colorpalette_button_settings_background + '!important;border-color:' + complianz.colorpalette_button_settings_border + '!important}';
-            css += '.cc-compliance .cc-btn.cc-save-settings:hover{background-color:' + complianz.colorpalette_button_settings_background + '!important}';
+            css += '.cc-compliance .cc-btn.cc-save-settings:hover{background-color:' + getHoverColour(complianz.colorpalette_button_settings_background) + '!important}';
 
             if (complianz.checkbox_style == 'slider') {
             	// Slider
@@ -787,8 +805,8 @@ jQuery(document).ready(function ($) {
         }
 
         // Functional only
-		css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-dismiss{color:' + complianz.colorpalette_button_deny_text + ';background-color:' + complianz.colorpalette_button_deny_background + ';border-color:' + complianz.colorpalette_button_deny_border_ + '}';
-		css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-dismiss:hover{background-color:' + getHoverColour(complianz.colorpalette_button_deny_background) + '}';
+		css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-dismiss{color:' + complianz.colorpalette_button_deny_text + ';background-color:' + complianz.colorpalette_button_deny_background + ';border-color:' + complianz.colorpalette_button_deny_border + '}';
+        css += '#cc-window.cc-window .cc-compliance .cc-btn.cc-dismiss:hover{background-color:' + getHoverColour(complianz.colorpalette_button_deny_background) + '}';
 
 		if ( complianz.banner_width !== 468 ) {
 			css += "#cc-window.cc-floating {max-width:" + complianz.banner_width + "px;}";
@@ -1196,7 +1214,7 @@ jQuery(document).ready(function ($) {
 		request.open('POST', complianz.url.replace('/v1', '/v1/track'), true);
 		var data = {
 			'consented_categories': cats,
-			'consenttype': complianz.consenttype
+			'consenttype': window.wp_consent_type,//store the source consenttype, as our complianz.consenttype will not include optinstats.
 		};
 
 		request.setRequestHeader('Content-type', 'application/json');
@@ -1248,7 +1266,6 @@ jQuery(document).ready(function ($) {
 					$('.'+cat).each(function(){
 						$(this).prop('checked', false);
 					});
-
 				}
 			}
 		}
@@ -1916,22 +1933,6 @@ jQuery(document).ready(function ($) {
 		}
 	}
 
-	/**
-	 * Toggle service
-	 */
-
-	$(document).on('click', '.cmplz-service-header', function () {
-		var item = $(this).next();
-
-		if (item.hasClass('cmplz-service-hidden')) {
-			$(this).addClass('cmplz-service-open');
-			item.removeClass('cmplz-service-hidden');
-		} else {
-			$(this).removeClass('cmplz-service-open');
-			item.addClass('cmplz-service-hidden');
-		}
-	});
-
 	function getHoverColour(hex){
 		if (hex[0] == '#') {
 			hex = hex.substr(1);
@@ -1950,6 +1951,7 @@ jQuery(document).ready(function ($) {
 			B = (num >> 8 & 0x00FF) + amt,
 			G = (num & 0x0000FF) + amt;
 		var newColour = (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+
 		return '#'+newColour;
 	}
 });

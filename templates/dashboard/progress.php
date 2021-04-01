@@ -26,7 +26,7 @@
 		</div>
 	</div>
 
-	<div class="rsssl-scroll-container">
+	<div class="cmplz-scroll-container">
 			<?php
 			$warning_args = array(
 				'cache' => false,

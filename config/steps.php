@@ -73,13 +73,13 @@ $this->steps = apply_filters('cmplz_steps',array(
 					),
 
 					5 => array(
-						'title' => __( 'Used cookies', 'complianz-gdpr' ),
+						'title' => __( 'Cookie descriptions', 'complianz-gdpr' ),
 						'intro' => '<p>'.sprintf(_x( 'Complianz provides your Cookie Policy with comprehensive cookie descriptions, supplied by cookie database.org. We connect to this open-source database using an external API, which sends the results of the cookiescan (a list of found cookies, used plugins and your domain) to cookie database.org, for the sole purpose of providing you with accurate descriptions and keeping them up-to-date at a weekly schedule. For more information, please read %sthis article%s.',
                                     'complianz-gdpr' ).'</p>',
                                     '<a href="https://complianz.io/our-cookiedatabase-a-new-initiative/">', '</a>' )
 					),
 					6 => array(
-						'title' => __( 'Used services', 'complianz-gdpr' ),
+						'title' => __( 'Service descriptions', 'complianz-gdpr' ),
 						'intro' => '<p>'._x( 'Below services use cookies on your website to add functionality. You can use cookiedatabase.org to synchronize information or edit the service if needed. Unknown services will be moderated and added by cookiedatabase.org as soon as possible.',
 							'intro used cookies', 'complianz-gdpr' ).'</p>'
 					),

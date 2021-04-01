@@ -66,6 +66,7 @@ function cmplz_install_cookiebanner_table() {
             `buttons_border_radius` text NOT NULL,
             `animation` text NOT NULL,
             `use_box_shadow` int(11) NOT NULL,
+            `hide_preview` int(11) NOT NULL,
               PRIMARY KEY  (ID)
             ) $charset_collate;";
 		dbDelta( $sql );
@@ -99,6 +100,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
         public $buttons_border_radius;
         public $animation;
         public $use_box_shadow;
+        public $hide_preview;
 
 		/* texts */
         public $header;
@@ -114,6 +116,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		public $readmore_privacy;
 		public $readmore_impressum;
 		public $tagmanager_categories;
+		public $tagmanager_categories_x;
 		public $save_preferences;
 		public $accept_all;
 		public $view_preferences;
@@ -155,15 +158,10 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		public $set_defaults;
 
         function __construct( $id = false, $set_defaults = true ) {
-
 	        $this->translation_id = $this->get_translation_id();
 	        $this->id             = $id;
 	        $this->set_defaults   = $set_defaults;
-
-	        if ( $this->id !== false ) {
-		        //initialize the cookiebanner settings with this id.
-		        $this->get();
-	        }
+	        $this->get();
         }
 
 		/**
@@ -180,8 +178,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 
 			global $wpdb;
 			//make sure we have at least one default banner
-			$cookiebanners
-				= $wpdb->get_results( "select * from {$wpdb->prefix}cmplz_cookiebanners as cb where cb.default = true" );
+			$cookiebanners = $wpdb->get_results( "select * from {$wpdb->prefix}cmplz_cookiebanners as cb where cb.default = true" );
 			if ( empty( $cookiebanners ) ) {
 				$array['default'] = true;
 			}
@@ -233,45 +230,50 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		private function get() {
 			global $wpdb;
 
-			if ( ! intval( $this->id ) > 0 ) {
-				return;
+			if ( intval( $this->id ) > 0 ) {
+				$cookiebanner = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookiebanners where ID = %s", intval( $this->id ) ) );
+				if ( $cookiebanner ) {
+					$this->banner_version = $cookiebanner->banner_version;
+					$this->title          = $cookiebanner->title;
+					$this->default        = $cookiebanner->default;
+					$this->archived       = $cookiebanner->archived;
+
+					foreach ( $cookiebanner as $fieldname => $value ) {
+						$this->{$fieldname} = $this->get_value( $fieldname, $value );
+						//if partially empty
+						if ( is_array( $this->{$fieldname} ) ) {
+							$this->{$fieldname} = wp_parse_args( $this->{$fieldname}, $this->get_default( $fieldname ) );
+						}
+					}
+
+					foreach ( $this as $fieldname => $value ) {
+						if ( $this->is_translatable( $fieldname ) ) {
+							$this->{$fieldname . '_x'} = $this->translate( $value, $fieldname );
+						}
+					}
+
+					/**
+					 * Fallback if upgrade didn't complete successfully
+					 */
+
+					if ( $this->set_defaults ) {
+						if ( $this->use_categories === true ) {
+							$this->use_categories = 'legacy';
+						} elseif ( $this->use_categories === false ) {
+							$this->use_categories = 'no';
+						}
+						if ( $this->use_categories_optinstats === true ) {
+							$this->use_categories_optinstats = 'legacy';
+						} elseif ( $this->use_categories_optinstats === false ) {
+							$this->use_categories_optinstats = 'no';
+						}
+					}
+				}
 			}
 
-			$cookiebanner = $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->prefix}cmplz_cookiebanners where ID = %s", intval( $this->id ) ) );
-			if ( $cookiebanner ) {
-				$this->banner_version = $cookiebanner->banner_version;
-				$this->title          = $cookiebanner->title;
-				$this->default        = $cookiebanner->default;
-				$this->archived       = $cookiebanner->archived;
-
-				foreach ($cookiebanner as $fieldname => $value) {
-					$this->{$fieldname} = $this->get_value( $fieldname, $value );
-					if ( is_array($this->{$fieldname})){
-						$this->{$fieldname} = wp_parse_args($this->{$fieldname}, $this->get_default( $fieldname ));
-					}
-				}
-
-				foreach ( $this as $fieldname => $value ) {
-					if ( $this->is_translatable( $fieldname )) {
-						$this->{$fieldname.'_x'} = $this->translate( $value, $fieldname );
-					}
-				}
-
-				/**
-				 * Fallback if upgrade didn't complete successfully
-				 */
-
-				if ( $this->set_defaults ) {
-					if ( $this->use_categories === true ) {
-						$this->use_categories = 'legacy';
-					} elseif ( $this->use_categories === false ) {
-						$this->use_categories = 'no';
-					}
-					if ($this->use_categories_optinstats  === true) {
-						$this->use_categories_optinstats = 'legacy';
-					} elseif ( $this->use_categories_optinstats === false ) {
-						$this->use_categories_optinstats = 'no';
-					}
+			foreach ( $this as $fieldname => $value ) {
+				if ( empty($value) ) {
+					$this->{$fieldname} = $this->get_default( $fieldname );
 				}
 			}
 
@@ -303,7 +305,8 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			if (is_array($value)) {
 				$value = array_filter($value);
 			}
-			return ! empty( $value ) ? $value : $this->get_default( $fieldname );
+
+			return $value;
 		}
 
 		/**
@@ -324,6 +327,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		/**
 		 * translate field
 		 *
+		 * @param string $value
 		 * @param string $fieldname
 		 *
 		 * @return string
@@ -392,7 +396,9 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		private function get_default( $fieldname ) {
-			if (!$this->set_defaults) return false;
+			if (!$this->set_defaults) {
+				return false;
+			}
 			return
 				( isset( COMPLIANZ::$config->fields[ $fieldname ]['default'] ) )
 				? COMPLIANZ::$config->fields[ $fieldname ]['default'] : '';
@@ -478,7 +484,8 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
                 'colorpalette_button_settings'=> $this->sanitize_hex_array( $this->colorpalette_button_settings ),
                 'buttons_border_radius'       => $this->sanitize_int_array( $this->buttons_border_radius ),
                 'animation'                   => sanitize_title( $this->animation ),
-                'use_box_shadow'              => sanitize_title( $this->use_box_shadow ),
+                'use_box_shadow'              => boolval( $this->use_box_shadow ),
+                'hide_preview'              => boolval( $this->hide_preview ),
 			);
 
 			if ( $this->use_custom_cookie_css ) {
@@ -687,7 +694,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			}
 
 			if ( COMPLIANZ::$cookie_admin->tagmamanager_fires_scripts() ) {
-				$tm_cats = explode( ',', $this->tagmanager_categories );
+				$tm_cats = explode( ',', $this->tagmanager_categories_x );
 				foreach ( $tm_cats as $i => $tm_category ) {
 					if ( $i > 1 ) continue;
 					if ( empty( $tm_category ) ) {
@@ -801,15 +808,10 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				$categories = $this->get_available_categories();
 				$revers_arr = array_reverse($categories);
 				$highest_level_cat = array_key_first($revers_arr);
-				$total = 0;
-				$highest_conversion_count = $this->get_count( $highest_level_cat, $filter_consenttype );
-				foreach ( $categories as $category ) {
-					$count = $this->get_count( $category, $filter_consenttype );
-					$total += $count;
-				}
-
+				$conversion_count = $this->get_count( $highest_level_cat, $filter_consenttype );
+				$total = $this->get_count( 'all', $filter_consenttype );
 				$total = ( $total == 0 ) ? 1 : $total;
-				$score = ROUND( 100 * ( $highest_conversion_count / $total ) );
+				$score = ROUND( 100 * ( $conversion_count / $total ) );
 				return $score;
 			}
 
@@ -826,28 +828,29 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		 */
 
 		public function get_count( $consent_category, $consenttype ) {
+			global $wpdb;
 			$available_categories  = $this->get_available_categories( false );
 			$ab_testing_start_time = get_option('cmplz_tracking_ab_started');
+
 			//sanitize status
+			if ( $consent_category !== 'all' && !in_array( $consent_category, $available_categories ) ) return 0;
 
-			if ( !in_array( $consent_category, $available_categories ) ) return 0;
+			//category
+			$category_sql = '';
+			if ($consent_category !== 'all') $category_sql = " AND $consent_category = 1";
 
-			global $wpdb;
 			$consenttype_sql = " AND consenttype='$consenttype'";
-
 			if ( $consenttype === 'all' ) {
 				$consenttypes    = cmplz_get_used_consenttypes();
 				$consenttype_sql = " AND (consenttype='" . implode( "' OR consenttype='", $consenttypes ) . "')";
 			}
 
-			$sql = $wpdb->prepare("SELECT count(*) from {$wpdb->prefix}cmplz_statistics WHERE time> %s AND $consent_category = 1 $consenttype_sql" , $ab_testing_start_time );
+			$sql = $wpdb->prepare("SELECT count(*) from {$wpdb->prefix}cmplz_statistics WHERE time> %s $category_sql $consenttype_sql" , $ab_testing_start_time );
 
 			if ( cmplz_ab_testing_enabled() ) {
 				$sql = $wpdb->prepare( $sql . " AND cookiebanner_id=%s", $this->id );
 			}
-			$count = $wpdb->get_var( $sql );
-
-			return $count;
+			return $wpdb->get_var( $sql );
 		}
 
 		/**
@@ -926,7 +929,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				if ( $use_cats) {
 
 					if ( COMPLIANZ::$cookie_admin->tagmamanager_fires_scripts() ) {
-						$categories = explode( ',', $this->tagmanager_categories );
+						$categories = explode( ',', $this->tagmanager_categories_x );
 						foreach ( $categories as $i => $category ) {
 							if ( empty( $category ) ) {
 								continue;
@@ -1032,7 +1035,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				'dismiss_on_timeout'                      => $this->dismiss_on_timeout,
 				'cookie_expiry'                           => cmplz_get_value( 'cookie_expiry' ),
 				'nonce'                                   => wp_create_nonce( 'set_cookie' ),
-				'url'                                     => add_query_arg( 'lang', substr( get_locale(), 0, 2 ), get_rest_url() . 'complianz/v1/' ),
+				'url'                                     => add_query_arg( array('lang' => substr(get_locale(),0,2), 'locale' => get_locale() ), get_rest_url().'complianz/v1/' ),
 				'set_cookies_on_root'                     => cmplz_get_value( 'set_cookies_on_root' ),
 				'cookie_domain'                           => COMPLIANZ::$cookie_admin->get_cookie_domain(),
 				'current_policy_id'                       => COMPLIANZ::$cookie_admin->get_active_policy_id(),
@@ -1089,7 +1092,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 
 				if ( COMPLIANZ::$cookie_admin->tagmamanager_fires_scripts() ) {
 					$output['tm_categories'] = true;
-					$categories = explode( ',', $this->tagmanager_categories );
+					$categories = explode( ',', $this->tagmanager_categories_x );
 					$output['cat_num']    = count( $categories );
 				}
 				$output['view_preferences'] = $this->view_preferences_x;

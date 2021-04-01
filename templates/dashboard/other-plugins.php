@@ -22,6 +22,7 @@ $plugins = array(
 	'COMPLIANZTC' => array(
 			'constant_free' => 'cmplz_tc_version',
 			'constant_premium' => 'cmplz_tc_version',
+			'url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
 			'website' => 'https://complianz.io',
 			'search' => 'complianz+terms+conditions+stand-alone',
 			'title' => 'Complianz - '. __("Terms and Conditions.", "complianz-gdpr"),

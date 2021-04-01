@@ -91,7 +91,7 @@ class cmplz_tour {
 					'title'  => __( 'Cookie Banner', 'complianz-gdpr' ),
 					'text'   => __( "Here you can configure and style your cookie banner if the Wizard is completed. An extra tab will be added with region-specific settings.", 'complianz-gdpr' ),
 					'link'   => add_query_arg( array( 'page' => 'cmplz-cookiebanner', 'id'   => cmplz_get_default_banner_id() ), admin_url( "admin.php" ) ),
-					'attach' => '#CMPLZ_COOKIEBANNER-general .cmplz-settings-title',
+					'attach' => '#general.CMPLZ_COOKIEBANNER .cmplz-settings-title',
 					'position' => 'bottom',
 				),
 
@@ -99,7 +99,7 @@ class cmplz_tour {
 					'title'  => __( "Integrations", "complianz-gdpr" ),
 					'text'   => __( "Based on your answers in the Wizard, we will automatically enable integrations with relevant services and plugins. In case you want to block extra scripts, you can add them to the Script Center.", 'complianz-gdpr' ),
 					'link'   => add_query_arg(array("page" => 'cmplz-script-center'), admin_url( "admin.php" ) ),
-					'attach' => '#integrations-services .cmplz-settings-title',
+					'attach' => '#services .cmplz-settings-title',
 					'position' => 'right',
 				),
 				array(
@@ -114,7 +114,7 @@ class cmplz_tour {
 					'text'   => __( "Complianz tracks changes in your Cookie Notice and Cookie Policy with time-stamped documents. This is your consent registration while respecting the data minimization guidelines and won't store any user data.", 'complianz-gdpr' ),
 					'link'   => add_query_arg(array("page" => 'cmplz-proof-of-consent'), admin_url( "admin.php" ) ),
 					'attach' => 'input[name=cmplz_generate_snapshot]',
-					'position' => 'right',
+					'position' => 'top',
 				),
 				array(
 					'title'  => __( "Let's start the Wizard", 'complianz-gdpr' ),

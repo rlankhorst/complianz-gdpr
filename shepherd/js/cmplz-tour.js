@@ -5,7 +5,6 @@ jQuery(document).ready(function($) {
 	stepsArr.forEach(([key, value]) => {
 		steps[key] = value;
 	});
-	console.log(steps);
 	var prevLink = [];
 	var prevText = [];
 	var nextLink = [];

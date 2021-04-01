@@ -1,0 +1,173 @@
+<html>
+<script src='http://localhost/rogierlankhorst/wp-includes/js/jquery/jquery.js?ver=3.5.1' id='jquery-core-js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.0/Chart.bundle.min.js' id='chartjs-js'></script>
+<script>
+	Chart.defaults.groupableBar = Chart.helpers.clone(Chart.defaults.bar);
+
+	var helpers = Chart.helpers;
+	Chart.controllers.groupableBar = Chart.controllers.bar.extend({
+		calculateBarX: function (index, datasetIndex) {
+			// position the bars based on the stack index
+			var stackIndex = this.getMeta().stackIndex;
+			return Chart.controllers.bar.prototype.calculateBarX.apply(this, [index, stackIndex]);
+		},
+
+		hideOtherStacks: function (datasetIndex) {
+			var meta = this.getMeta();
+			var stackIndex = meta.stackIndex;
+
+			this.hiddens = [];
+			for (var i = 0; i < datasetIndex; i++) {
+				var dsMeta = this.chart.getDatasetMeta(i);
+				if (dsMeta.stackIndex !== stackIndex) {
+					this.hiddens.push(dsMeta.hidden);
+					dsMeta.hidden = true;
+				}
+			}
+		},
+
+		unhideOtherStacks: function (datasetIndex) {
+			var meta = this.getMeta();
+			var stackIndex = meta.stackIndex;
+
+			for (var i = 0; i < datasetIndex; i++) {
+				var dsMeta = this.chart.getDatasetMeta(i);
+				if (dsMeta.stackIndex !== stackIndex) {
+					dsMeta.hidden = this.hiddens.unshift();
+				}
+			}
+		},
+
+		calculateBarY: function (index, datasetIndex) {
+			this.hideOtherStacks(datasetIndex);
+			var barY = Chart.controllers.bar.prototype.calculateBarY.apply(this, [index, datasetIndex]);
+			this.unhideOtherStacks(datasetIndex);
+			return barY;
+		},
+
+		calculateBarBase: function (datasetIndex, index) {
+			this.hideOtherStacks(datasetIndex);
+			var barBase = Chart.controllers.bar.prototype.calculateBarBase.apply(this, [datasetIndex, index]);
+			this.unhideOtherStacks(datasetIndex);
+			return barBase;
+		},
+
+		getBarCount: function () {
+			var stacks = [];
+
+			// put the stack index in the dataset meta
+			Chart.helpers.each(this.chart.data.datasets, function (dataset, datasetIndex) {
+				var meta = this.chart.getDatasetMeta(datasetIndex);
+				if (meta.bar && this.chart.isDatasetVisible(datasetIndex)) {
+					var stackIndex = stacks.indexOf(dataset.stack);
+					if (stackIndex === -1) {
+						stackIndex = stacks.length;
+						stacks.push(dataset.stack);
+					}
+					meta.stackIndex = stackIndex;
+				}
+			}, this);
+
+			this.getMeta().stacks = stacks;
+			return stacks.length;
+		},
+	});
+</script>
+
+<link rel='stylesheet' id='chartjs-css'  href='http://localhost/rogierlankhorst/wp-content/plugins/complianz-gdpr-premium/assets/chartjs/chart.min.css?ver=5.0.01616755225' media='all' />
+
+
+<body>
+<h1>test</h1>
+<canvas id="myChart" width="400" height="400"></canvas>
+<script>
+	jQuery(document).ready(function ($) {
+	var data = {
+		labels: ["January", "February", "March"],
+		datasets: [
+			{
+				label: "Apples",
+				backgroundColor: "rgba(99,255,132,0.2)",
+				data: [20, 10, 30],
+				stack: 1
+			},
+			{
+				label: "Bananas",
+				backgroundColor: "rgba(99,132,255,0.2)",
+				data: [40, 50, 20],
+				stack: 1
+			},
+			{
+				label: "Cookies",
+				backgroundColor: "rgba(255,99,132,0.2)",
+				data: [60, 20, 20],
+				stack: 1
+			},
+			{
+				label: "Apples",
+				backgroundColor: "rgba(99,255,132,0.2)",
+				data: [20, 10, 30],
+				stack: 2
+			},
+			{
+				label: "Bananas",
+				backgroundColor: "rgba(99,132,255,0.2)",
+				data: [40, 50, 20],
+				stack: 2
+			},
+			{
+				label: "Cookies",
+				backgroundColor: "rgba(255,99,132,0.2)",
+				data: [60, 20, 20],
+				stack: 2
+			},
+			{
+				label: "Apples",
+				backgroundColor: "rgba(99,255,132,0.2)",
+				data: [20, 10, 30],
+				stack: 3
+			},
+			{
+				label: "Bananas",
+				backgroundColor: "rgba(99,132,255,0.2)",
+				data: [40, 50, 20],
+				stack: 3
+			},
+			{
+				label: "Cookies",
+				backgroundColor: "rgba(255,99,132,0.2)",
+				data: [60, 20, 20],
+				stack: 3
+			},
+		]
+	};
+
+	var ctx = document.getElementById("myChart").getContext("2d");
+	new Chart(ctx, {
+		type: 'groupableBar',
+		data: data,
+		options: {
+			legend: {
+				labels: {
+					generateLabels: function(chart) {
+						return Chart.defaults.global.legend.labels.generateLabels.apply(this, [chart]).filter(function(item, i){
+							return i <= 2;
+						});
+					}
+				}
+			},
+			scales: {
+				yAxes: [{
+					ticks: {
+						max: 160,
+					},
+					stacked: true,
+				}]
+			}
+		}
+	});
+	});
+
+</script>
+</body>
+</html>

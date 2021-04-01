@@ -35,6 +35,13 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'firstparty_marketing' => false,
 	),
 
+	'wp-video-lightbox' => array(
+			'constant_or_function' => 'WP_VIDEO_LIGHTBOX_VERSION',
+			'label'                => 'WP Video Lightbox',
+			'firstparty_marketing' => false,
+	),
+
+
 //	'ultimate-addons-elementor' => array(
 //			'constant_or_function' => 'UAEL_FILE',
 //			'label'                => 'Ultimate Addons for Elementor',
@@ -47,11 +54,17 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'firstparty_marketing' => false,
 	),
 
-//	'novo-map' => array(
-//			'constant_or_function' => 'NOVO_MAP_VERSION',
-//			'label'                => 'Novo-Map',
-//			'firstparty_marketing' => false,
-//	),
+  'easy-fancybox' => array(
+	 	  'constant_or_function' => 'EASY_FANCYBOX_VERSION',
+		  'label'                => 'Easy FancyBox',
+		  'firstparty_marketing' => false,
+  ),
+
+	'novo-map' => array(
+			'constant_or_function' => 'NOVO_MAP_VERSION',
+			'label'                => 'Novo-Map',
+			'firstparty_marketing' => false,
+	),
 
 	'citadela-directory' => array(
 			'constant_or_function' => 'CITADELA_DIRECTORY_LITE_PLUGIN',
@@ -146,6 +159,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'constant_or_function' => 'PYS_FREE_VERSION',
 		'label'                => 'PixelYourSite',
 		'firstparty_marketing' => false,
+	),
+
+	'pixelyoursite-pro'     => array(
+			'constant_or_function' => 'PYS_VERSION',
+			'label'                => 'PixelYourSite Pro',
+			'firstparty_marketing' => false,
 	),
 
 	'user-registration' => array(
@@ -281,24 +300,6 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 	'tidio-live-chat'  => array(
 		'constant_or_function' => 'TIDIOCHAT_VERSION',
 		'label'                => 'Tidio Live Chat',
-		'firstparty_marketing' => false,
-	),
-
-	'instagram-feed'   => array(
-		'constant_or_function' => 'SBIVER',
-		'label'                => 'Smash Balloon Instagram Feed',
-		'firstparty_marketing' => false,
-	),
-
-	'facebook-feed'   => array(
-		'constant_or_function' => 'CFFVER',
-		'label'                => 'Smash Balloon Facebook Feed',
-		'firstparty_marketing' => false,
-	),
-
-	'twitter-feed'   => array(
-		'constant_or_function' => 'CTF_VERSION',
-		'label'                => 'Smash Balloon Twitter Feed',
 		'firstparty_marketing' => false,
 	),
 
@@ -542,7 +543,7 @@ function cmplz_uses_thirdparty( $name ) {
 }
 
 
-add_action( 'complianz_after_label', 'cmplz_add_placeholder_checkbox', 11, 1 );
+add_action( 'complianz_after_label', 'cmplz_add_placeholder_checkbox', 91, 1 );
 function cmplz_add_placeholder_checkbox( $args ) {
 	if ( ! isset( $args['fieldname'] ) || ! isset( $args["type"] )
 	     || $args["type"] !== 'checkbox'

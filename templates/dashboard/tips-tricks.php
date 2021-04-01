@@ -29,7 +29,7 @@
 	</div>
 
 	<div class="cmplz-trick">
-		<a href="https://complianz.io/leave-a-feature-request/" target="_blank">
+		<a href="https://complianz.io/?s=translations&lang=en" target="_blank">
 			<div class="cmplz-bullet"></div>
 			<div class="cmplz-tips-tricks-content"><?php _e("Translating your cookie notice and legal documents", "complianz-gdpr")?></div>
 		</a>

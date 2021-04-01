@@ -62,10 +62,10 @@
 		this.mB = this.moveBar.bind(this);
 
 		this.wrapper = d.createElement('div');
-		this.wrapper.setAttribute('class', 'rsssl-ss-wrapper');
+		this.wrapper.setAttribute('class', 'cmplz-ss-wrapper');
 
 		this.el = d.createElement('div');
-		this.el.setAttribute('class', 'rsssl-ss-content');
+		this.el.setAttribute('class', 'cmplz-ss-content');
 
 		if (this.direction === 'rtl') {
 			this.el.classList.add('rtl');
@@ -139,7 +139,7 @@
 	}
 
 	function initScrollContainer() {
-		var nodes = d.querySelectorAll('.rsssl-scroll-container');
+		var nodes = d.querySelectorAll('.cmplz-scroll-container');
 
 		for (var i = 0; i < nodes.length; i++) {
 			initEl(nodes[i]);

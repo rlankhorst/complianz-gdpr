@@ -9,7 +9,7 @@
 				'page'    => 'cmplz-wizard',
 				'step'    => STEP_COOKIES,
 				'section' => 4 ), admin_url( 'admin.php' ) ) . '">';
-		cmplz_settings_overlay( sprintf( __( '%s are marked as not being used on your website in the %swizard%s.', 'complianz-gdpr' ), $not_used, $link, '</a>' ), 'warning' );
+		cmplz_settings_overlay( sprintf( __( '%s are marked as not being used on your website in the %swizard%s.', 'complianz-gdpr' ), $not_used, $link, '</a>' ) );
 	}
 
 	cmplz_notice( sprintf( __( "Enabled %s will be blocked on the front-end of your website until the user has given consent (opt-in), or after the user has revoked consent (opt-out). When possible a placeholder is activated. You can also disable or configure the placeholder to your liking.", 'complianz-gdpr' ),

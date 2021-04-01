@@ -250,34 +250,26 @@ if ( ! class_exists( "cmplz_proof_of_consent" ) ) {
 			</script>
 			<div class="wrap">
 			<div id="cookie-policy-snapshots" class="wrap cookie-snapshot">
-				<h1><?php _e( "Proof of consent", 'complianz-gdpr' ) ?></h1>
-				<p>
-					<?php
-					$link_open
-						= '<a href="https://complianz.io/user-consent-registration/" target="_blank">';
-					cmplz_notice( sprintf( __( 'When you make significant changes to your Cookie Policy, cookie banner or revoke functionality, we will add a time-stamped document under "Proof of Consent" with the latest changes. If there is any concern if your website was ready for GDPR at a point of time, you can use the Complianz Proof of Consent to show the efforts you made being compliant, while respecting data minimization and full control of consent registration by the user. On a daily basis, the document will be generated if the plugin has detected significant changes. For more information read our article about %suser consent registration%s.',
-						'complianz-gdpr' ), $link_open, '</a>' ) ) ?>
-				</p>
-				<?php
-				if ( isset( $_POST['cmplz_generate_snapshot'] ) ) {
-					cmplz_notice( __( "Proof of consent updated!",
-						"complianz-gdpr" ), 'success', true );
-				}
-				if ( isset( $_POST['cmplz_generate_snapshot_error'] ) ) {
-					cmplz_notice( __( "Proof of consent generation failed. Check your write permissions in the uploads directory",
-						"complianz-gdpr" ), 'warning' );
-				}
-				?>
-
-				<form id="cmplz-cookiestatement-snapshot-generate" method="POST"
-				      action="">
+				<form id="cmplz-cookiestatement-snapshot-generate" method="POST" action="">
+					<h1 class="wp-heading-inline"><?php _e( "Proof of consent", 'complianz-gdpr' ) ?></h1>
 					<?php echo wp_nonce_field( 'cmplz_generate_snapshot',
 						'cmplz_nonce' ); ?>
-					<input type="submit" class="button button-primary"
+					<input type="submit" class="button button-primary cmplz-header-btn"
 					       name="cmplz_generate_snapshot"
 					       value="<?php _e( "Generate now",
 						       "complianz-gdpr" ) ?>"/>
+					<a href="https://complianz.io/definitions/what-is-proof-of-consent/" target="_blank" class="button button-default cmplz-header-btn"><?php _e( "Read more", "complianz-gdpr" ) ?></a>
 				</form>
+				<?php
+				if ( isset( $_POST['cmplz_generate_snapshot'] ) ) {
+					cmplz_notice( __( "Proof of consent updated!",
+							"complianz-gdpr" ), 'success', false );
+				}
+				if ( isset( $_POST['cmplz_generate_snapshot_error'] ) ) {
+					cmplz_notice( __( "Proof of consent generation failed. Check your write permissions in the uploads directory",
+							"complianz-gdpr" ), 'warning' );
+				}
+				?>
 				<form id="cmplz-cookiestatement-snapshot-filter" method="get"
 				      action="">
 

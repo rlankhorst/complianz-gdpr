@@ -24,7 +24,6 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 
 			//some custom warnings
 			add_action( 'admin_init', array( $this, 'check_upgrade' ), 10, 2 );
-			add_action( 'cmplz_show_message', array( $this, 'show_message' ) );
 			add_action( 'admin_init', array( $this, 'process_reset_action' ), 10, 1 );
 			add_action('cmplz_fieldvalue', array($this, 'filter_cookie_domain'), 10, 2);
 			add_action( 'wp_ajax_cmplz_dismiss_warning', array( $this, 'dismiss_warning' ) );
@@ -230,18 +229,6 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 
 			$this->success_message = __( 'Data successfully cleared',
 				'complianz-gdpr' );
-		}
-
-		public function show_message() {
-			if ( ! empty( $this->error_message ) ) {
-				cmplz_notice( $this->error_message, 'warning' );
-				$this->error_message = "";
-			}
-
-			if ( ! empty( $this->success_message ) ) {
-				cmplz_notice( $this->success_message, 'success', true );
-				$this->success_message = "";
-			}
 		}
 
 		public function check_upgrade() {

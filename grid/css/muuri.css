@@ -46,7 +46,7 @@
 }
 .cmplz-grid .cmplz-grid-item .cmplz-grid-header .cmplz-grid-controls {
   float: right;
-  margin-top: 20px;
+  margin-top: 16px;
   color: #cecece;
 }
 .cmplz-grid .cmplz-grid-item .cmplz-grid-header .cmplz-grid-controls a {
@@ -173,9 +173,6 @@
   display: flex;
   align-items: center;
   padding: 2px 0;
-}
-.cmplz-grid .cmplz-tips-tricks .cmplz-trick .rsssl-bullet:hover {
-  background-color: #f8be2e;
 }
 .cmplz-grid .cmplz-tips-tricks .cmplz-trick .cmplz-tips-tricks-content {
   float: left;

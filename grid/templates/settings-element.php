@@ -1,6 +1,5 @@
-<form id="{page}-{name}" action="" method="post">
-	<?php wp_nonce_field( 'complianz_save', 'cmplz_nonce', true, true ) ?>
-	<section id="{name}" action="" method="post">
+<div class="cmplz-form">
+	<section id="{name}" class="{page}" action="" method="post">
 		<div class="cmplz-settings-item {class}" data-id="{index}" {conditions}>
 			<div class="cmplz-settings-header-container">
 				<div class="cmplz-settings-header">
@@ -15,4 +14,4 @@
 			</div>
 		</div>
 	</section>
-</form>
+</div>

@@ -1,4 +1,4 @@
-.rsssl-ss-wrapper {
+.cmplz-ss-wrapper {
   overflow: hidden;
   width: 100%;
   height: 100%;
@@ -6,7 +6,7 @@
   z-index: 1;
   float: left;
 }
-.rsssl-ss-content {
+.cmplz-ss-content {
   height: 100%;
   width: calc(100% + 18px);
   padding: 0 0 0 0;
@@ -15,7 +15,7 @@
   overflow-y: scroll;
   box-sizing: border-box;
 }
-.rsssl-ss-content.rtl {
+.cmplz-ss-content.rtl {
   width: calc(100% + 18px);
   right: auto;
 }

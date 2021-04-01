@@ -11,8 +11,6 @@
 	if ( isset( COMPLIANZ::$config->pages[ $region ] ) ) {
 
 		foreach ( COMPLIANZ::$config->pages[ $region ] as $type => $page ) {
-			error_log("11heck $type");
-
 			if ( ! $page['public'] ) {
 				continue;
 			}
@@ -27,14 +25,12 @@
 
 			$title     = $page['title'];
 			if ( COMPLIANZ::$document->page_exists( $type, $region ) ) {
-				error_log("$type exists");
 
 				$title     = '<a href="' . get_permalink( COMPLIANZ::$document->get_shortcode_page_id( $type, $region ) ) . '">' . $page['title'] . '</a>';
 				$shortcode = COMPLIANZ::$document->get_shortcode( $type, $region, $force_classic = true );
 				$title     .= '<div class="cmplz-selectable cmplz-shortcode" id="'.$type.'">' . $shortcode . '</div>';
 				$generated = $checked_date = date( cmplz_short_date_format(), get_option( 'cmplz_documents_update_date' ) );
 				if ( ! COMPLIANZ::$document->page_required( $page, $region ) ) {
-					error_log("$type not required");
 
 					$args = array(
 						'status' => 'error',
@@ -48,7 +44,7 @@
 					$sync_status = COMPLIANZ::$document->syncStatus( COMPLIANZ::$document->get_shortcode_page_id( $type, $region ) );
 					$status = $sync_status === 'sync' ? "success" : "disabled";
 					$sync_icon = cmplz_icon( 'sync', $status );
-					$shortcode_icon = cmplz_icon( 'shortcode', $status );
+					$shortcode_icon = cmplz_icon( 'shortcode', $status , __( 'Click to copy the document shortcode', 'complianz-gdpr' ));
 					if ( $sync_status === 'sync' ) {
 						$shortcode_icon = '<span class="cmplz-copy-shortcode">' . $shortcode_icon . '</span>';
 					}
@@ -90,7 +86,7 @@
 			$title = '<a href="' . get_permalink($page_id) . '">' . $title . '</a>';
 			$title .= '<div class="cmplz-selectable cmplz-shortcode" id="'.$type.'">' . $shortcode . '</div>';
 			$sync_icon = cmplz_icon( 'sync', $status );
-			$shortcode_icon = cmplz_icon( 'shortcode', $status );
+			$shortcode_icon = cmplz_icon( 'shortcode', $status , __( 'Click to copy the document shortcode', 'complianz-gdpr' ));
 
 			if ($page_id) {
 				$generated = date( cmplz_short_date_format(), get_option( 'cmplz_tc_documents_update_date', get_option( 'cmplz_documents_update_date' ) ) );

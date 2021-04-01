@@ -1,6 +1,6 @@
 <div class="cmplz-section-content">
 
-    <form action="{page_url}" method="POST">
+    <form class="cmplz-form" action="{page_url}" method="POST">
 		<input type="hidden" value="{page}" name="wizard_type">
 		<input type="hidden" value="{step}" name="step">
 		<input type="hidden" value="{section}" name="section">

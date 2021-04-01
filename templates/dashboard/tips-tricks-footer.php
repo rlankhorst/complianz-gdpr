@@ -2,7 +2,7 @@
 <div class="item-footer">
 	<div>
 		<div class="cmplz-footer-contents">
-			<a href="https://complianz.io/" class="button button-default" target="_blank"><?php _e("View all", "complianz-gdpr")?></a>
+			<a href="https://complianz.io/docs/" class="button button-default" target="_blank"><?php _e("View all", "complianz-gdpr")?></a>
 		</div>
 	</div>
 </div>

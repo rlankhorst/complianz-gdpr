@@ -159,7 +159,7 @@ $this->fields = $this->fields + array(
 			'table'   => true,
 			'label'   => __( "Enable safe mode", 'complianz-gdpr' ),
 			'default' => false,
-			'help'    => sprintf( __( 'When safe mode is enabled, all integrations will be disabled temporarily, please read %sthese instructions%s to debug the issue or ask support if needed.',
+			'comment'    => sprintf( __( 'When safe mode is enabled, all integrations will be disabled temporarily, please read %sthese instructions%s to debug the issue or ask support if needed.',
 				'complianz-gdpr' ),
 				'<a  target="_blank" href="https://complianz.io/debugging-issues/">', '</a>' )
 

@@ -515,6 +515,16 @@ if ( ! class_exists( "cmplz_document" ) ) {
 						$paragraph_id_arr[ $id ]['sub']  = $sub_paragraph;
 					}
 
+					//count dropdowns as sub parapgraphs
+					if ( isset( $element['dropdown-open'] ) && $paragraph > 0
+					     && ( ! isset( $element['numbering'] )
+					          || $element['numbering'] )
+					) {
+						$sub_paragraph ++;
+						$paragraph_id_arr[ $id ]['main'] = $paragraph;
+						$paragraph_id_arr[ $id ]['sub']  = $sub_paragraph;
+					}
+
 					//count annexes
 					if ( isset( $element['annex'] ) ) {
 						$annex ++;
@@ -599,6 +609,7 @@ if ( ! class_exists( "cmplz_document" ) ) {
 			$element, $paragraph, $sub_paragraph, $annex
 		) {
 			$nr = "";
+			$html = "";
 			if ( isset( $element['annex'] ) ) {
 				$nr = __( "Annex", 'complianz-gdpr' ) . " " . $annex . ": ";
 				if ( isset( $element['title'] ) ) {
@@ -638,6 +649,28 @@ if ( ! class_exists( "cmplz_document" ) ) {
 				return '<p class="cmplz-subtitle">' . esc_html( $nr )
 				       . esc_html( $element['subtitle'] ) . '</p>';
 			}
+
+
+			// Adds a dropdown to the Privacy Statement. Opens a div and should be closed with dropdown-close
+			if ( isset( $element['dropdown-open'] ) ) {
+
+				if ( $paragraph > 0 && $sub_paragraph > 0
+				     && $this->is_numbered_element( $element )
+				) {
+					$nr = $paragraph . "." . $sub_paragraph . " ";
+				}
+				$dp_class = isset($element['dropdown-class']) ? $element['dropdown-class'] : '';
+
+				$html .= '<details class="cmplz-dropdown '.$dp_class.'">';
+				if ( isset( $element['dropdown-title'] ) ) {
+					$html .= '<summary><h3 class="test">'. esc_html( $nr ) . esc_html( $element['dropdown-title'] ) . '</h3></summary>';
+				}
+				return $html;
+			}
+			if ( isset( $element['dropdown-close'] ) ) {
+				return '</details>';
+			}
+
 		}
 
 		/**
@@ -1135,7 +1168,12 @@ if ( ! class_exists( "cmplz_document" ) ) {
 
 		public function manage_consent_html( $atts = array(), $content = null, $tag = ''
 		) {
-			return '<a id="manage-consent"></a><p id="cmplz-manage-consent-container" class="cmplz-manage-consent-container"></p>';
+			$html = '<div id="cmplz-manage-consent-container-nojavascript">'.
+					_x( "You have loaded the Cookie Policy without javascript support.", "cookie policy", "complianz-gdpr" ).
+					_x( "On AMP, you can use the manage consent button on the bottom of the page.", "cookie policy", "complianz-gdpr" ).
+					'</div>';
+			$html .= '<a id="manage-consent"></a><p id="cmplz-manage-consent-container" class="cmplz-manage-consent-container"></p>';
+			return $html;
 		}
 
 		public function revoke_link( $atts = array(), $content = null, $tag = ''
@@ -1652,7 +1690,7 @@ if ( ! class_exists( "cmplz_document" ) ) {
 										<?php echo $icon ?>
 									</div>
 									<div class="cmplz-hidden cmplz-shortcode" id="<?php echo $type?>"><?php echo $shortcode?></div>
-									<span class="cmplz-copy-shortcode"><?php echo cmplz_icon('shortcode', 'success'); ?></span>
+									<span class="cmplz-copy-shortcode"><?php echo cmplz_icon('shortcode', 'success', __( 'Click to copy the document shortcode', 'complianz-gdpr' ) ); ?></span>
 
                                 <?php
                             }
@@ -1701,23 +1739,6 @@ if ( ! class_exists( "cmplz_document" ) ) {
 			if ( empty( $menus ) ) {
 				cmplz_notice( sprintf( __( "No menus were found. Skip this step, or %screate a menu%s first." ), $link, '</a>' ) );
 				return;
-			}
-
-			$created_pages = $this->get_created_pages();
-			$required_pages = $this->get_required_pages();
-			if (count($required_pages) > count($created_pages) ){
-				cmplz_notice( __( 'You haven\'t created all required pages yet. You can add missing pages in the previous step, or create them manually with the shortcode. You can come back later to this step to add your pages to the desired menu, or do it manually via Appearance > Menu.',
-					'complianz-gdpr' )
-				);
-			}
-
-			$pages_not_in_menu = $this->pages_not_in_menu();
-			if ( $pages_not_in_menu ) {
-				if ( cmplz_ccpa_applies() ) {
-					cmplz_notice( sprintf( __( 'You sell personal data from your customers. This means you are required to put the "%s" page clearly visible on your homepage.',
-						'complianz-gdpr' ),
-						cmplz_us_cookie_statement_title() ) );
-				}
 			}
 
 			$regions = cmplz_get_regions( true );
@@ -1944,12 +1965,9 @@ if ( ! class_exists( "cmplz_document" ) ) {
 			) {
 				$page = COMPLIANZ::$config->pages[ $region ][ $type ];
 				$ext  = $region == 'eu' ? '' : '-' . $region;
-
-				return '<!-- wp:complianz/document {"title":"' . $page['title']
-				       . '","selectedDocument":"' . $type . $ext . '"} /-->';
+				return '<!-- wp:complianz/document {"title":"' . $page['title'] . '","selectedDocument":"' . $type . $ext . '"} /-->';
 			} else {
-				return '[cmplz-document&nbsp;type="' . $type . '"&nbsp;region="' . $region
-				       . '"]';
+				return '[cmplz-document type="' . $type . '" region="' . $region . '"]';
 			}
 		}
 
@@ -2169,7 +2187,6 @@ if ( ! class_exists( "cmplz_document" ) ) {
 				$atts, $tag );
 			$type   = sanitize_title( $atts['type'] );
 			$region = sanitize_title( $atts['region'] );
-
 			if ( $type ) {
 				$html         = $this->get_document_html( $type, $region );
 				$allowed_html = cmplz_allowed_html();
@@ -2647,8 +2664,10 @@ if ( ! class_exists( "cmplz_document" ) ) {
 		 * Function to generate a pdf file, either saving to file, or echo to browser
 		 *
 		 * @param $page
+		 * @param $region
 		 * @param $post_id
 		 * @param $save_to_file
+		 * @param $intro
 		 * @param $append //if we want to add addition html
 		 *
 		 * @throws \Mpdf\MpdfException

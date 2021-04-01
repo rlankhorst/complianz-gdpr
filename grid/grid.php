@@ -220,13 +220,6 @@ function cmplz_grid_element($grid_item){
         $footer,
 	), $contents );
 
-//    if ( isset($grid_item['save']) ) {
-//        $contents = '<form id="' . $grid_item['page'] . '-' . $grid_item['name'] . '" action="" method="post">' .
-//                        wp_nonce_field( 'complianz_save', 'cmplz_nonce', true, false ) .
-//                        $contents .
-//                    '</form>';
-//    }
-
 	return $contents;
 }
 

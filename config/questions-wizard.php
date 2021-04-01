@@ -276,7 +276,7 @@ $this->fields = $this->fields + array(
 			'options'   => $this->yes_no,
 			'condition' => array( 'use_cdb_api' => 'yes' ),
 			'label'     => __( "Do you want to hyperlink cookie names so visitors can find more information on Cookiedatabase.org?", 'complianz-gdpr' ),
-			'comment'   => __("These links will be added with HTML attributes so it won't hurt SEO.", "complianz-gdpr"),
+			'tooltip'   => __("These links will be added with HTML attributes so it won't hurt SEO.", "complianz-gdpr"),
 		),
 
 		'cookie_scan' => array(
@@ -309,6 +309,8 @@ $this->fields = $this->fields + array(
 					'complianz-gdpr' ),
 				'matomo'             => __( 'Yes, with Matomo',
 					'complianz-gdpr' ),
+					'clicky'             => __( 'Yes, with Clicky',
+						'complianz-gdpr' ),
 				'google-tag-manager' => __( 'Yes, with Google Tag Manager',
 					'complianz-gdpr' ),
 				'no'                 => __( 'No', 'complianz-gdpr' )
@@ -462,10 +464,24 @@ $this->fields = $this->fields + array(
 			'default'                 => '',
 			'required'                => true,
 			'revoke_consent_onchange' => true,
-			'label'                   => __( "Enter your Matomo site ID",
-				'complianz-gdpr' ),
+			'label'                   => __( "Enter your Matomo site ID", 'complianz-gdpr' ),
 			'condition'               => array( 'configuration_by_complianz' => 'yes' ),
 			'callback_condition'      => array( 'compile_statistics' => 'matomo' ),
+		),
+
+		'clicky_site_id' => array(
+			'step'                    => STEP_COOKIES,
+			'section'                 => 3,
+			'source'                  => 'wizard',
+			'type'                    => 'number',
+			'default'                 => '',
+			'required'                => true,
+			'revoke_consent_onchange' => true,
+			'label'                   => __( "Enter your Clicky site ID", 'complianz-gdpr' ),
+			'callback_condition'               => array(
+				'compile_statistics' => 'clicky',
+			),
+			'help'                    => __( "Because Clicky always sets a so-called unique identifier cookie, consent for statistics is always required.", 'complianz-gdpr' ) . cmplz_read_more( 'https://complianz.io/configuring-clicky-for-gdpr/' ),
 		),
 
 		'matomo_url' => array(
@@ -495,7 +511,7 @@ $this->fields = $this->fields + array(
 			'default'                 => '',
 			'label'                   => __( "Does your website use third-party services?",
 				'complianz-gdpr' ),
-			'tooltip'                    => __( "e.g. services like Google Fonts, Maps or recaptcha usually place cookies.",
+			'tooltip'                    => __( "e.g. services like Google Fonts, Maps or reCAPTCHA usually place cookies.",
 				'complianz-gdpr' ),
 		),
 

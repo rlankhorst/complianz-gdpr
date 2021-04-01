@@ -153,7 +153,8 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					'googletagmanager.com/gtag/js',
 					'gtm.js',
 				),
-				'matomo'             => array( 'piwik.js', 'matomo.js' ),
+				'matomo' => array( 'piwik.js', 'matomo.js' ),
+				'clicky' => array( 'static.getclicky.com/js', 'clicky_site_ids' ),
 			);
 
 
@@ -488,6 +489,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				),
 
 				'all-pages-created' => array(
+					'warning_condition' => 'wizard->wizard_completed_once',
 					'success_conditions'  => array(
 						'document->all_required_pages_created',
 					),

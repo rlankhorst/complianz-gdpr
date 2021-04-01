@@ -13,33 +13,6 @@ if ( ! function_exists( 'cmplz_uses_google_analytics' ) ) {
 	}
 }
 
-if ( ! function_exists( 'cmplz_fields_filter' ) ) {
-
-	/**
-	 * This overrides the enabled setting for use_categories, based on the tagmanager settings
-	 * When tagmanager is enabled, use of TM cats is obligatory
-	 *
-	 * @param $fields
-	 *
-	 * @return mixed
-	 */
-
-	function cmplz_fields_filter( $fields ) {
-
-		$tm_fires_scripts = cmplz_get_value( 'fire_scripts_in_tagmanager' )
-		                    === 'yes' ? true : false;
-		$uses_tagmanager  = cmplz_get_value( 'compile_statistics' )
-		                    === 'google-tag-manager' ? true : false;
-		if ( $uses_tagmanager && $tm_fires_scripts ) {
-			//$fields['use_categories']['disabled'] = true;
-		}
-
-		return $fields;
-	}
-	add_filter( 'cmplz_fields', 'cmplz_fields_filter', 10, 1 );
-
-}
-
 if ( ! function_exists('cmplz_subscription_type') ) {
     /**
      * Get subscription type
@@ -108,6 +81,21 @@ if ( ! function_exists( 'cmplz_tagmanager_conditional_helptext' ) ) {
 				'complianz-gdpr' );
 		}
 
+		return $text;
+	}
+}
+
+if ( ! function_exists( 'cmplz_cookiebanner_category_conditional_helptext' ) ) {
+
+	function cmplz_cookiebanner_category_conditional_helptext() {
+		$text = '';
+		if ( cmplz_get_value('country_company') == "FR"
+		) {
+			$text
+				= sprintf( __( "Due to the French CNIL guidelines we suggest using the Accept + View preferences template. For more information, read about the CNIL updated privacy guidelines in this %sarticle%s.",
+                    'complianz-gdpr' ),
+                    '<a href="https://complianz.io/cnil-updated-privacy-guidelines/" target="_blank">', "</a>" );
+		}
 		return $text;
 	}
 }
@@ -473,8 +461,14 @@ if ( ! function_exists( 'cmplz_get_region_for_country' ) ) {
 if ( ! function_exists( 'cmplz_get_consenttype_for_country' ) ) {
 	function cmplz_get_consenttype_for_country( $country_code ) {
 		$regions       = COMPLIANZ::$config->regions;
-		$actual_region = cmplz_get_region_for_country( $country_code );
+		$used_regions = cmplz_get_regions();
+		foreach ( $regions as $key => $region ) {
+			if ( !array_key_exists( $key, $used_regions )) {
+				unset($regions[$key]);
+			}
+		}
 
+		$actual_region = cmplz_get_region_for_country( $country_code );
 		if ( isset( $regions[ $actual_region ]) && isset( $regions[ $actual_region ]['type'] ) ) {
 			return apply_filters( 'cmplz_consenttype', $regions[ $actual_region ]['type'], $actual_region );
 		}
@@ -506,13 +500,13 @@ if ( ! function_exists( 'cmplz_notice' ) ) {
 	 * Notification without arrow on the left. Should be used outside notifications center
 	 * @param string $msg
 	 * @param string $type notice | warning | success
-	 * @param bool   $remove_after_change
+	 * @param bool   $hide
 	 * @param bool   $echo
      * @param array  $condition $condition['question'] $condition['answer']
 	 *
 	 * @return string|void
 	 */
-	function cmplz_notice( $msg, $type = 'notice', $remove_after_change = false, $echo = true, $condition = false) {
+	function cmplz_notice( $msg, $type = 'notice', $hide = false, $echo = true, $condition = false) {
 		if ( $msg == '' ) {
 			return;
 		}
@@ -529,11 +523,8 @@ if ( ! function_exists( 'cmplz_notice' ) ) {
 		    $args['condition'] = array($condition['question'] => $condition['answer']);
             $cmplz_hidden = cmplz_field::this()->condition_applies($args) ? "" : "cmplz-hidden";;
         }
-
-        // Hide
-		$remove_after_change_class = $remove_after_change ? "cmplz-remove-after-change" : "";
-
-		$html = "<div class='cmplz-panel-wrap'><div class='cmplz-panel cmplz-notification cmplz-{$type} {$remove_after_change_class} {$cmplz_hidden} {$condition_check}' {$condition_question} {$condition_answer}><div>{$msg}</div></div></div>";
+		$hide = $hide ? 'cmplz-hidden' : '';
+		$html = "<div class='cmplz-panel-wrap'><div class='cmplz-panel cmplz-notification cmplz-{$type} {$hide} {$cmplz_hidden} {$condition_check}' {$condition_question} {$condition_answer}><div>{$msg}</div></div></div>";
 
 		if ( $echo ) {
 			echo $html;
@@ -573,9 +564,8 @@ if ( ! function_exists( 'cmplz_sidebar_notice' ) ) {
 		}
 
 		// Hide
-		$remove_after_change_class = $remove_after_change ? "cmplz-remove-after-change" : "";
 
-		$html = "<div class='cmplz-help-modal cmplz-notice cmplz-{$type} {$remove_after_change_class} {$cmplz_hidden} {$condition_check}' {$condition_question} {$condition_answer}>{$msg}</div>";
+		$html = "<div class='cmplz-help-modal cmplz-notice cmplz-{$type} {$cmplz_hidden} {$condition_check}' {$condition_question} {$condition_answer}>{$msg}</div>";
 
 		if ( $echo ) {
 			echo $html;
@@ -1458,6 +1448,14 @@ if ( ! function_exists( 'cmplz_allowed_html' ) ) {
 				'id'    => array(),
 			),
 			'tr'         => array(),
+			'details' => array(
+				'class' => array(),
+				'id'    => array(),
+			),
+			'summary' => array(
+				'class' => array(),
+				'id'    => array(),
+			),
 			'svg'         => array(
 				'width' => array(),
 				'height' => array(),
@@ -1661,6 +1659,7 @@ if ( ! function_exists( 'cmplz_used_cookies' ) ) {
 		$servicesHTML = '';
 		foreach ( $cookies as $serviceID => $serviceData ) {
 			$has_empty_cookies = false;
+			$allPurposes = array();
 
 			$service    = new CMPLZ_SERVICE( $serviceID,
 				substr( get_locale(), 0, 2 ) );
@@ -1702,6 +1701,7 @@ if ( ! function_exists( 'cmplz_used_cookies' ) ) {
 
                 $cookieHTML .= str_replace( array( '{purpose}' ), array( $purpose ), $purpose_row );
 				$cookieHTML = str_replace(array('{cookies_per_purpose}'), array($cookies_per_purpose_HTML), $cookieHTML);
+				array_push($allPurposes, $purpose);
 			}
 
 			$service_name = $service->ID && strlen( $service->name ) > 0
@@ -1740,17 +1740,19 @@ if ( ! function_exists( 'cmplz_used_cookies' ) ) {
 				$purposeDescription .= ' ' . $link_open . __( 'Read more',
 						"complianz-gdpr" ) . $link_close;
 			}
-
+			$allPurposes = implode (", ", $allPurposes);
 			$servicesHTML .= str_replace( array(
 				'{service}',
 				'{sharing}',
 				'{purposeDescription}',
-				'{cookies}'
+				'{cookies}',
+				'{allPurposes}'
 			), array(
 				$service_name,
 				$sharing,
 				$purposeDescription,
-				$cookieHTML
+				$cookieHTML,
+				$allPurposes
 			), $services_template );
 		}
 
@@ -2379,6 +2381,9 @@ if ( ! function_exists( 'cmplz_get_cookiebanners' ) ) {
 		}
 		if ( isset( $args['default'] ) && $args['default'] === false ) {
 			$sql = 'AND cdb.default = false';
+		}
+		if ( isset( $args['limit'] ) && $args['limit'] !== false ) {
+			$sql = ' LIMIT '.intval($args['limit']);
 		}
 		$cookiebanners
 			= $wpdb->get_results( "select * from {$wpdb->prefix}cmplz_cookiebanners as cdb where 1=1 $sql" );

@@ -50,8 +50,6 @@
 #cmplz-content-area {
   display: grid;
   grid-template-columns: 20% auto;
-
-
   h1 {
     padding: 0;
   }
@@ -62,9 +60,14 @@
     display: flex;
 	font-size:17px;
 	font-weight:600;
-
     justify-content: space-between;
     align-content: center;
+	.cmplz-save-settings {
+	  display:none;
+	  color:@color-warning;
+	  font-weight:normal;
+	  font-size:12px;
+	}
 	&.cmplz-section-content-notifications-header {
 	  border-bottom: 1px solid @input-border-color;
 	  h1{
@@ -91,7 +94,7 @@
       margin: @green-gap @green-gap 0 @green-gap;
       .cmplz-wizard-progress-bar-value {
         height: 100%;
-        background: @brand-primary;
+        background: #61CE70;
 		border-radius: 4px;
       }
     }
@@ -108,7 +111,7 @@
           text-decoration: none;
           width: calc(100% - (@green-gap + @green-gap));
           h2 {
-            font-size: 14px;
+            font-size: 15px;
 			font-weight:500;
             margin: 0;
           }
@@ -183,7 +186,14 @@
 	p:not(:first-child) {
 	  margin-top: 1em;
 	}
-    form {
+	.cmplz-master-label {
+	  >div {
+		padding:@green-gap;
+		background-color: #fff;
+	  }
+	}
+
+	.cmplz-form {
       display: grid;
 	  grid-template-columns: auto 325px !important;
       grid-column-gap: @red-gap;
@@ -212,12 +222,7 @@
       margin-left: 15px;
     }
 
-	  .cmplz-master-label {
-		>div {
-		  padding:@green-gap;
-		  background-color: #fff;
-		}
-	  }
+
 
 		//if an intro is nested in a field, we don't need the padding, as the field already has padding
 	  .cmplz-field .cmplz-wizard-intro {
@@ -297,6 +302,7 @@
 	  }
 
 	  .upload_button {
+		margin-right:@default-margin;
 		width: 100px;
 		height: 30px;
 	  }
@@ -436,11 +442,11 @@
 		}
 	  }
 
-	  form {
+	  .cmplz-form {
 		grid-template-columns: auto;
 	  }
 	  position: relative;
-	  #integrations-services, #integrations-plugins {
+	  #services, #plugins {
 		.cmplz-field {
 		  label.cmplz-checkbox-container {
 			margin:0;
@@ -486,6 +492,9 @@
 		  align-content: center;
 		  .cmplz-grid-controls {
 			margin: auto 0;
+			select {
+			  font-size:13px;
+			}
 		  }
 
 		  .cmplz-settings-header {
@@ -518,12 +527,14 @@
 
 		.cmplz-settings-body {
 		  position:relative;
+
 		  .cmplz-settings-overlay {
+			display: grid;
+			grid-template-columns: 680px auto;
 			position: absolute;
 			top:0;
 			left: 0;
 			bottom: 0;
-			right: 0;
 			background: rgba(255, 255, 255, 0.8);
 
 			.cmplz-settings-overlay-message{
@@ -591,6 +602,9 @@
     }
   }
 }
+//#cmplz-settings #cmplz-content-area .cmplz-section-content form {
+//  grid-template-columns: auto 0 !important;
+//}
 
 #cmplz-wizard, #cmplz-settings {
   /* ----------- Icons ----------- */
@@ -598,9 +612,9 @@
   .cmplz-icon {
 	border-radius: 50%;
 	&.dashicons-before:before {
-	  font-size:15px;
-	  height:15px;
-	  width:15px;
+	  font-size:18px;
+	  height:20px;
+	  width:20px;
 	  margin-top:2px;
 	}
 	&.cmplz-empty {
@@ -883,179 +897,20 @@
   display: none !important;
 }
 
-/* START TOOLTIP STYLES */
-[cmplz-tooltip] {
-  position: relative; /* opinion 1 */
-}
 
-/* Applies to all tooltips */
-[cmplz-tooltip]::before,
-[cmplz-tooltip]::after {
-  text-transform: none;
-  font-size: 13px;
-  user-select: none;
-  pointer-events: none;
-  position: absolute;
-  display: none;
-  opacity: 0;
-}
-
-[cmplz-tooltip]::before {
-  content: '';
-  border: 5px solid transparent; /* opinion 4 */
-  z-index: 1001; /* absurdity 1 */
-}
-
-[cmplz-tooltip]::after {
-  content: attr(cmplz-tooltip); /* magic! */
-  font-weight:normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 1ch 1.5ch;
-  border-radius: .3ch;
-  box-shadow: 0 1em 2em -.5em rgba(0, 0, 0, 0.35);
-  background: #333;
-  color: #fff;
-  z-index: 1000; /* absurdity 2 */
-  min-width:150px;
-  text-align:left;
-}
-
-/* Make the tooltips respond to hover */
-[cmplz-tooltip]:hover::before,
-[cmplz-tooltip]:hover::after {
-  display: block;
-}
-
-/* don't show empty tooltips */
-[cmplz-tooltip='']::before,
-[cmplz-tooltip='']::after {
-  display: none !important;
-}
-
-/* FLOW: UP */
-[cmplz-tooltip]:not([flow])::before,
-[cmplz-tooltip][flow^="up"]::before {
-  bottom: 100%;
-  border-bottom-width: 0;
-  border-top-color: #333;
-}
-
-[cmplz-tooltip]:not([flow])::after,
-[cmplz-tooltip][flow^="up"]::after {
-  bottom: calc(100% + 5px);
-}
-
-[cmplz-tooltip]:not([flow])::before,
-[cmplz-tooltip]:not([flow])::after,
-[cmplz-tooltip][flow^="up"]::before,
-[cmplz-tooltip][flow^="up"]::after {
-  left: 50%;
-  transform: translate(-50%, -.5em);
-}
-
-/* FLOW: DOWN */
-[cmplz-tooltip][flow^="down"]::before {
-  top: 100%;
-  border-top-width: 0;
-  border-bottom-color: #333;
-}
-
-[cmplz-tooltip][flow^="down"]::after {
-  top: calc(100% + 5px);
-}
-
-[cmplz-tooltip][flow^="down"]::before,
-[cmplz-tooltip][flow^="down"]::after {
-  left: 50%;
-  transform: translate(-50%, .5em);
-}
-
-/* FLOW: LEFT */
-[cmplz-tooltip][flow^="left"]::before {
-  top: 50%;
-  border-right-width: 0;
-  border-left-color: #333;
-  left: calc(0em - 5px);
-  transform: translate(-.5em, -50%);
-}
-
-[cmplz-tooltip][flow^="left"]::after {
-  top: 50%;
-  right: calc(100% + 5px);
-  transform: translate(-.5em, -50%);
-}
-
-/* FLOW: RIGHT */
-[cmplz-tooltip][flow^="right"]::before {
-  top: 10px;
-  border-left-width: 0;
-  border-right-color: #333;
-  right: calc(0em - 23px);
-  transform: translate(.5em, -50%);
-}
-
-[cmplz-tooltip][flow^="right"]::after {
-  top: 10px;
-  left: calc(100% + 23px);
-  transform: translate(.5em, -50%);
-  min-width:300px;
-}
-
-/* KEYFRAMES */
-@keyframes tooltips-vert {
-  to {
-	opacity: .9;
-	transform: translate(-50%, 0);
-  }
-}
-
-@keyframes tooltips-horz {
-  to {
-	opacity: .9;
-	transform: translate(0, -50%);
-  }
-}
-
-/* FX All The Things */
-[cmplz-tooltip]:not([flow]):hover::before,
-[cmplz-tooltip]:not([flow]):hover::after,
-[cmplz-tooltip][flow^="up"]:hover::before,
-[cmplz-tooltip][flow^="up"]:hover::after,
-[cmplz-tooltip][flow^="down"]:hover::before,
-[cmplz-tooltip][flow^="down"]:hover::after {
-  animation: tooltips-vert 300ms ease-out forwards;
-}
-
-[cmplz-tooltip][flow^="left"]:hover::before,
-[cmplz-tooltip][flow^="left"]:hover::after,
-[cmplz-tooltip][flow^="right"]:hover::before,
-[cmplz-tooltip][flow^="right"]:hover::after {
-  animation: tooltips-horz 300ms ease-out forwards;
-}
-
-#cmplz-header {
-  font-size:16px;
-  .button-black {
-    background-color: black;
-    color: white;
-    border-color: black;
-    padding: 0 25px;
-  }
-  .link-black {
-    color: #3c434a;
-    padding: 5px 5px;
-  }
-}
-
+//this breaks the editor height.
 .wp-editor-wrap iframe {
-  height: initial !important;
+  //height: initial !important;
 }
 
 .cmplz-help-warning-wrap {
+  display: flex; // make us of Flexbox
+  align-items: center; // does vertically center the desired content
   .cmplz-help-modal {
 	.cmplz-pointer;
+  	z-index: 1;
 	position:absolute;
+
 	&.cmplz-notice {
 	  background-color: @brand-primary;
 	  &:after {
@@ -1081,7 +936,7 @@
 	  border-color: #f8be2e;
 	}
 
-	margin: @green-gap 0 0 @green-gap;
+	margin: @small-margin 0 0 @green-gap;
 	padding: 10px 15px;
 	color: #fff;
 	background-color: @brand-primary;
@@ -1241,8 +1096,8 @@ a.button.cmplz-open-modal {
           align-content: center;
           justify-content: flex-end;
           svg {
-            width: 18px;
-            height: 18px;
+            width: 15px;
+            height: 15px;
             padding-top: 1px;
           }
         }
@@ -1307,7 +1162,6 @@ a.button.cmplz-open-modal {
 	width: fit-content;
   }
 
-
   &.cmplz-warning {
 	.cmplz-pointer;
 	&:after {
@@ -1328,6 +1182,13 @@ a.button.cmplz-open-modal {
 	margin-left: 22px;
   }
 
+}
+
+.cmplz-wizard-menu .cmplz-panel.cmplz-success {
+  border-radius: 50px 0 0 50px;
+  text-align: right;
+  margin-right: -20px;
+  padding: 5px 5px 5px 15px;
 }
 
 
@@ -1563,6 +1424,8 @@ html .mceContentBody {
 	}
   }
 
+
+
   /*body */
   .cmplz-body, #cmplz-content-area {
 	input[type="text"].cmplz-document-custom-url {
@@ -1609,7 +1472,6 @@ html .mceContentBody {
       }
     }
 
-	/* Styling for the previous and next buttons */
 	.cmplz-master-label h2 {
       margin: 0;
 	  padding: @green-gap @green-gap 0 0;
@@ -2116,15 +1978,15 @@ input.current-page {
 
 
 
-#wpbody-content {
-  padding-bottom: 0;
-}
+//#wpbody-content {
+//  padding-bottom: 0;
+//}
 
 #cmplz-settings {
 
-  .cmplz-master-label h2 {
-    padding: @green-gap @green-gap 0 0 !important;
-  }
+  //.cmplz-master-label h2 {
+  //  padding: @green-gap @green-gap 0 0 !important;
+  //}
 
   .cmplz-footer-contents {
 	display:flex;

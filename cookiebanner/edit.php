@@ -73,7 +73,6 @@ $grid_items = array(
 );
 
 $banner_id = (isset($_GET['id']) ? intval($_GET['id']) : false);
-
 $input_elements =
 '<input type="hidden" name="cmplz_banner_id" value="' . $banner_id . '">' .
 '<input type="hidden" name="cmplz_impressum_required" value="' . cmplz_impressum_required() . '">' .

@@ -20,11 +20,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			self::$_this = $this;
 			//safe before the fields are loaded in config, in init
 			add_action( 'plugins_loaded', array( $this, 'process_save' ), 14 );
-			add_action( 'cmplz_register_translation',
-				array( $this, 'register_translation' ), 10, 2 );
-
+			add_action( 'cmplz_register_translation', array( $this, 'register_translation' ), 10, 2 );
 			add_action( 'complianz_before_label', array( $this, 'before_label' ), 10, 1 );
 			add_action( 'complianz_before_label', array( $this, 'show_errors' ), 10, 1 );
+			add_action( 'complianz_after_label', array( $this, 'after_label' ), 10, 1 );
 			add_action( 'complianz_label_html', array( $this, 'label_html' ), 10, 1 );
 			add_action( 'complianz_after_field', array( $this, 'after_field' ), 10, 1 );
 
@@ -493,6 +492,12 @@ if ( ! class_exists( "cmplz_field" ) ) {
             echo '><div class="cmplz-field"><div class="cmplz-label">';
 		}
 
+		public function after_label(){
+			?>
+			</div>
+			<?php
+		}
+
 		public function get_master_label( $args ) {
 			if ( ! isset( $args['master_label'] ) ) {
 				return;
@@ -567,7 +572,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 
 			<input <?php echo $required ?>
@@ -597,13 +602,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
             $is_required = $args['required'] ? 'is-required' : '';
             $check_icon = cmplz_icon('check', 'success');
             $times_icon = cmplz_icon('check', 'failed');
-
 			?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
             <input <?php echo $required ?>
                 class="validation <?php echo $is_required ?>"
@@ -633,13 +635,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
             $is_required = $args['required'] ? 'is-required' : '';
             $check_icon = cmplz_icon('check', 'success');
             $times_icon = cmplz_icon('check', 'failed');
-
             ?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<input <?php echo $required ?>
                 class="validation <?php echo $is_required ?>"
@@ -668,13 +667,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
             $is_required = $args['required'] ? 'is-required' : '';
             $check_icon = cmplz_icon('check', 'success');
             $times_icon = cmplz_icon('check', 'failed');
-
             ?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<input autocomplete="tel" <?php echo $required ?>
                    class="validation <?php echo $is_required ?>"
@@ -702,11 +698,9 @@ if ( ! class_exists( "cmplz_field" ) ) {
 				return;
 			}
 			?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<input <?php if ( $args['required'] ) {
 				echo 'required';
@@ -740,8 +734,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			?>
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 			<label class="cmplz-switch">
 				<input name="<?php echo esc_html( $fieldname ) ?>" type="hidden" value="<?php echo $placeholder_value ?>"/>
 				<input name="<?php echo esc_html( $fieldname ) ?>" size="40" type="checkbox"
@@ -809,12 +802,9 @@ if ( ! class_exists( "cmplz_field" ) ) {
             }
 
 			?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
             <div <?php echo $validate ?>>
 
 			<?php if ( ! empty( $args['options'] ) ) {
@@ -886,13 +876,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
                     }
                 }
             }
-
             ?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
             <?php
             if ( ! empty( $options ) ) {
@@ -982,13 +969,11 @@ if ( ! class_exists( "cmplz_field" ) ) {
                     $custom_page_id = $wp_privacy_policy;
                 }
             }
-
 			?>
 
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<label for="<?php echo $args['fieldname'] ?>"><?php printf(__("Select how you want to add your %s.",'complianz-gdpr'), $args['label']) ?><?php do_action("complianz_in_label", $args ) ?></label>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<div class="cmplz-document-field" data-fieldname="<?php echo esc_html( $fieldname ) ?>">
                 <?php if ( $args['disabled'] ) echo '<div class="cmplz-not-allowed">'; ?>
@@ -1112,12 +1097,13 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			$default_args = $this->default_args;
 			$args         = wp_parse_args( $args, $default_args );
 			if ( ! $type ) {
-				if ( isset( $args['condition'] ) ) {
+				if (  $args['condition']  ) {
 					$type = 'condition';
-				} elseif ( isset( $args['callback_condition']) ) {
+				} elseif (  $args['callback_condition'] ) {
 					$type = 'callback_condition';
 				}
 			}
+
 			if ( ! $type || ! $args[ $type ] ) {
 				return true;
 			}
@@ -1129,12 +1115,9 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			}
 
 			$condition = $args[ $type ];
-			_log($condition);
 			//if we're checking the condition, but there's also a callback condition, check that one as well.
 			//but only if it's an array. Otherwise it's a func.
 			if ( $type === 'condition' && isset( $args['callback_condition'] ) && is_array( $args['callback_condition'] ) ) {
-				_log("callback is array ");
-
 				$condition += $args['callback_condition'];
 			}
 
@@ -1231,8 +1214,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			?>
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<textarea name="<?php echo esc_html( $fieldname ) ?>"
                       <?php if ( $args['required'] ) {
@@ -1265,23 +1247,19 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			if ( ! $this->show_field( $args ) ) {
 				return;
 			}
-
 			?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 			<?php
 			$settings = array(
 				'media_buttons' => $media,
-				'editor_height' => 500,
+				'editor_height' => 200,
 				'textarea_rows' => 15,
 			);?>
-				<div class="cmplz-editor-container">
+			<div class="cmplz-editor-container" style="position:relative;">
 			<?php wp_editor( $value, $fieldname, $settings ); ?>
-				</div>
+			</div>
 			<?php do_action( 'complianz_after_field', $args ); ?>
 			<?php
 		}
@@ -1297,12 +1275,9 @@ if ( ! class_exists( "cmplz_field" ) ) {
 				return;
 			}
 			?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 			<div id="<?php echo esc_html( $fieldname ) ?>editor"
 			     style="height: 200px; width: 100%"><?php echo $value ?></div>
 			<?php do_action( 'complianz_after_field', $args ); ?>
@@ -1334,12 +1309,9 @@ if ( ! class_exists( "cmplz_field" ) ) {
 				return;
 			}
 			?>
-
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 			<div id="<?php echo esc_html( $fieldname ) ?>editor"
 			     style="height: 290px; width: 100%"><?php echo $value ?></div>
 			<?php do_action( 'complianz_after_field', $args ); ?>
@@ -1368,24 +1340,18 @@ if ( ! class_exists( "cmplz_field" ) ) {
             if ( ! $this->show_field( $args ) ) {
                 return;
             }
-
             $fieldname = 'cmplz_' . $args['fieldname'];
             $args['cols'] = count($args['fields']);
             $values = $this->get_value( $args['fieldname'], $args['default'] );
-
             ?>
-
             <?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-            </div><?php do_action( 'complianz_after_label', $args ); ?>
-
-
+            <?php do_action( 'complianz_after_label', $args ); ?>
             <?php
 
             foreach ($args['fields'] as $field)
             {
                 $value = $values[$field['fieldname']]; ?>
-
                 <div class="cmplz-color-picker-wrap">
 
                 <div class="cmplz-sublabel">
@@ -1419,14 +1385,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
             $fieldname = 'cmplz_' . $args['fieldname'];
             $args['cols'] = 5;
             $values = $this->get_value( $args['fieldname'], $args['default'] );
-
             ?>
-
             <?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-            </div><?php do_action( 'complianz_after_label', $args ); ?>
-
-
+            <?php do_action( 'complianz_after_label', $args ); ?>
             <?php
 
             $args['fields'] = array(
@@ -1493,14 +1455,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
             $fieldname = 'cmplz_' . $args['fieldname'];
             $args['cols'] = 5;
             $values = $this->get_value( $args['fieldname'], $args['default'] );
-
             ?>
-
             <?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-            </div><?php do_action( 'complianz_after_label', $args ); ?>
-
-
+            <?php do_action( 'complianz_after_label', $args ); ?>
             <?php
 
             $args['fields'] = array(
@@ -1601,8 +1559,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 				$args         = wp_parse_args( $args, $default_args );
 
 
-				$type              = ( $args['callback'] ) ? 'callback'
-					: $args['type'];
+				$type              = ( $args['callback'] ) ? 'callback' : $args['type'];
 				$args['fieldname'] = $fieldname;
 				switch ( $type ) {
 					case 'callback':
@@ -1705,7 +1662,6 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			<?php do_action( 'complianz_label_html' , $args );?>
 			<?php do_action( "cmplz_$callback", $args );?>
 			<?php do_action( 'complianz_after_label', $args );?>
-			</div>
 			<?php
 
 			do_action( 'complianz_after_field', $args );
@@ -1720,9 +1676,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			}
 			do_action( 'complianz_before_label', $args );
 			do_action( 'complianz_after_label', $args );?>
-			</div>
 			<?php
-			echo '</div><!--close in after field-->';
 			echo '<div class="cmplz-help-warning-wrap">';
 			if ( isset( $args['help'] ) ) {
 				cmplz_sidebar_notice( wp_kses_post( $args['help'] ) );
@@ -1746,8 +1700,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			?>
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<select <?php if ( $args['required'] ) {
 				echo 'required';
@@ -1778,13 +1731,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			if ( ! $this->show_field( $args ) ) {
 				return;
 			}
-
 			?>
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
-
+			<?php do_action( 'complianz_after_label', $args ); ?>
 			<?php do_action( 'complianz_after_field', $args ); ?>
 			<?php
 		}
@@ -1808,12 +1758,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			}
 
 			$red = isset($args['red']) && $args['red'] ? 'button-red' : '';
-
 			?>
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<?php if ( $args['post_get'] === 'get' ) { ?>
 				<a <?php if ( $args['disabled'] )
@@ -1854,8 +1802,8 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			?>
             <?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-            </div><?php do_action( 'complianz_after_label', $args ); ?>
-
+            <?php do_action( 'complianz_after_label', $args ); ?>
+			<div style="flex-grow:1"></div>
             <input class="upload_button button button-grey" value="Choose file"/>
             <input type="file" type="submit" name="cmplz-upload-file" style="display: none;">
 
@@ -1898,7 +1846,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			?>
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<button class="button" type="submit" name="cmplz_add_multiple"
 			        value="<?php echo esc_html( $args['fieldname'] ) ?>"><?php _e( "Add new",
@@ -1940,12 +1888,10 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			if ( ! $this->show_field( $args ) ) {
 				return;
 			}
-
 			do_action( 'complianz_before_label', $args );
 			do_action( 'complianz_after_label', $args );
-
 			?>
-			</div>
+
 			<div class="cmplz-list-container">
 				<div class="cmplz-skeleton"></div>
 			</div>
@@ -1990,10 +1936,8 @@ if ( ! class_exists( "cmplz_field" ) ) {
             }
 
             $default_language = substr( get_locale(), 0, 2 );
-
             do_action( 'complianz_before_label', $args );
             do_action( 'complianz_after_label', $args );?>
-			</div>
 			<?php
 
 			$languages  = COMPLIANZ::$cookie_admin->get_supported_languages();
@@ -2048,9 +1992,8 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			}
 			?>
 			<?php do_action( 'complianz_before_label', $args ); ?>
-			<label><?php echo $args["label"] . " " . __( 'list',
-						'complianz-gdpr' ) ?></label>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<label><?php echo $args["label"] . " " . __( 'list', 'complianz-gdpr' ) ?></label>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<?php
 			if ( $values ) {
@@ -2192,7 +2135,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			?>
 			<?php do_action( 'complianz_before_label', $args ); ?>
 			<?php do_action( 'complianz_label_html' , $args );?>
-			</div><?php do_action( 'complianz_after_label', $args ); ?>
+			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<?php
 			if ( $values ) {
@@ -2311,10 +2254,8 @@ if ( ! class_exists( "cmplz_field" ) ) {
 				if ( isset( $_POST['id'] ) ) {
 					$id = intval( $_POST['id'] );
 				}
-
 				$banner = new CMPLZ_COOKIEBANNER( $id );
-				$value  = ! empty( $banner->{$fieldname} )
-					? $banner->{$fieldname} : false;
+				$value  = $banner->{$fieldname};
 
 			} else {
 				$options = get_option( 'complianz_options_' . $source );

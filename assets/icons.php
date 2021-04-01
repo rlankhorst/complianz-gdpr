@@ -41,7 +41,6 @@ function cmplz_icon( $icon_name, $status, $tooltip = '', $size = 14) {
 			'success' => array(
 				'type' => 'dashicons',
 				'icon'    => 'dashicons-admin-page',
-				'tooltip' =>__( 'Click to copy the document shortcode', 'complianz-gdpr' ),
 			),
 			'disabled' => array(
 				'type' => 'dashicons',
@@ -147,8 +146,8 @@ function cmplz_icon( $icon_name, $status, $tooltip = '', $size = 14) {
         )
 	);
 
-	if ( $tooltip ) {
-        $tooltip =  'cmplz-tooltip="' . $tooltip . '" flow="right"';
+	if ( !empty($tooltip) ) {
+        $tooltip =  'cmplz-tooltip="' . $tooltip . '" flow="left"';
     } else if ( isset($icons[$icon_name][$status]['tooltip']) ) {
         $tooltip =  'cmplz-tooltip="' . $icons[$icon_name][$status]['tooltip'] . '" flow="left"';
     }

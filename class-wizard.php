@@ -106,7 +106,7 @@ if ( ! class_exists( "cmplz_wizard" ) ) {
                 echo '</div>';
 
 				if ( COMPLIANZ::$cookie_admin->site_needs_cookie_warning() ) {
-					cmplz_sidebar_notice( sprintf( __( "The cookie banner and cookie blocker are enabled. Please check your website if your configuration is working properly. Please read %sthese instructions%s to debug any issues while in safe mode. Safe mode is available under settings.", 'complianz-gdpr' ),
+					cmplz_sidebar_notice( sprintf( __( "The cookie banner and cookie blocker are enabled. Please check your website if your configuration is working properly. Please read %sthese instructions%s to debug any issues while in safe mode. Safe mode is available under settings.","complianz-gdpr").'&nbsp;'.__("You will find tips and tricks on your dashboard after you have configured your cookie banner.", 'complianz-gdpr' ),
                         '<a  target="_blank" href="https://complianz.io/debugging-manual">', '</a>'),
                         'warning');
 				}
@@ -643,7 +643,7 @@ if ( ! class_exists( "cmplz_wizard" ) ) {
             $regions = $this->get_section_regions( $page, $step, $section );
             $args['flags'] = cmplz_flag( $regions, false );
 
-            $args['save_notice'] = '';
+            $args['save_notice'] = cmplz_notice( __( "Updated successfully", 'complianz-gdpr' ), 'success', true , false);
             $args['save_as_notice'] = '';
             $args['learn_notice'] = '';
             $args['cookie_or_finish_button'] = '';
@@ -678,7 +678,7 @@ if ( ! class_exists( "cmplz_wizard" ) ) {
                         'notice', false, false);
                 }
             } else if ( isset( $_POST['cmplz-save'] ) ) {
-                $args['save_notice'] = cmplz_notice( __( "Changes saved successfully", 'complianz-gdpr' ), 'success', true , false);
+                $args['save_notice'] = cmplz_notice( __( "Changes saved successfully", 'complianz-gdpr' ), 'success', false , false);
             }
 
             $args['intro'] = $this->get_intro( $page, $step, $section );
@@ -801,8 +801,7 @@ if ( ! class_exists( "cmplz_wizard" ) ) {
 			$fields = COMPLIANZ::$config->fields( $page, $step, $section );
 
 			//get
-			$fields = cmplz_array_filter_multidimensional( $fields, 'required',
-				true );
+			$fields = cmplz_array_filter_multidimensional( $fields, 'required', true );
 			foreach ( $fields as $fieldname => $args ) {
 				//if a condition exists, only check for this field if the condition applies.
 				if ( isset( $args['condition'] )
@@ -1110,14 +1109,13 @@ if ( ! class_exists( "cmplz_wizard" ) ) {
 				'status' => 'all',
 			);
 			$total_warnings     = count( COMPLIANZ::$admin->get_warnings( $args ) );
-
 			$args = array(
 				'cache' => false,
 				'status' => 'completed',
 			);
 			$completed_warnings = count( COMPLIANZ::$admin->get_warnings( $args ) );
-
 			$percentage = round( 100 * ( $completed_warnings / $total_warnings ) + 0.45 );
+
 			$this->percentage_complete = $percentage;
 			return $percentage;
 		}

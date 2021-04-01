@@ -44,12 +44,9 @@ jQuery(document).ready(function ($) {
 				var element = document.createElement('a');
 				element.setAttribute('href',obj);
 				element.setAttribute('download', fileTitle);
-
 				document.body.appendChild(element);
-
 				//onClick property
 				element.click();
-
 				setTimeout(function() {
 					window.URL.revokeObjectURL(obj);
 				}, 60 * 1000);
@@ -228,49 +225,64 @@ jQuery(document).ready(function ($) {
         });
 
         //now apply the required.
-
         check_conditions();
-    }
+	}
 
     $(document).on('change', 'input', function (e) {
         check_conditions();
         remove_after_change();
-    });
+		cmplz_show_save_settings_feedback(e);
+	});
 
     $(document).on('keyup', 'input', function (e) {
         remove_after_change();
-    });
+		cmplz_show_save_settings_feedback(e);
+	});
 
     $(document).on('change', 'select', function (e) {
         check_conditions();
         remove_after_change();
-    });
+		cmplz_show_save_settings_feedback(e);
+	});
 
     $(document).on('change', 'textarea', function (e) {
         check_conditions();
         remove_after_change();
-    });
+		cmplz_show_save_settings_feedback(e);
+	});
 
     $(document).on('keyup', 'textarea', function (e) {
         remove_after_change();
-    });
+		cmplz_show_save_settings_feedback(e);
+	});
 
     $(document).on('click', 'button', function (e) {
         remove_after_change();
+		cmplz_show_save_settings_feedback(e);
     });
 
-    if ($("input[name=step]").val() == 2) {
-        setTimeout(function () {
-            if (typeof tinymce !== 'undefined') {
-                for (var i = 0; i < tinymce.editors.length; i++) {
-                    tinymce.editors[i].on('NodeChange keyup', function (ed, e) {
-                        remove_after_change();
-                    });
-                }
-            }
-        }, 5000);
-    }
+	setTimeout(function () {
+		if (typeof tinymce !== 'undefined') {
+			for (var i = 0; i < tinymce.editors.length; i++) {
+				tinymce.editors[i].on('NodeChange keyup', function (ed, e) {
+					console.log("on change editor");
+					cmplz_show_save_settings_feedback();
+					if ($("input[name=step]").val() == 2) {
+						remove_after_change();
+					}
+				});
+			}
+		}
+	}, 5000);
 
+	function cmplz_show_save_settings_feedback(e){
+		if (typeof e !== 'undefined' && e.target.type === 'submit') return;
+
+		if ( $('.cmplz-save-settings').length ) {
+			$('.cmplz-notification.cmplz-success').closest('.cmplz-panel-wrap').hide();
+			$('.cmplz-save-settings').show();
+		}
+	}
 
     $(document).on("cmplzRenderConditions", check_conditions);
 
@@ -1020,9 +1032,7 @@ jQuery(document).ready(function ($) {
 				var region = {};
 			}
 			region[$(this).attr('name')] = $(this).val();
-
 			pageTitles[$(this).data('region')] = region;
-
 		});
 
 		$.ajax({
@@ -1035,10 +1045,13 @@ jQuery(document).ready(function ($) {
 			}),
 			success: function (response) {
 				if (response.success) {
+					$('.cmplz-panel.cmplz-notification.cmplz-success.cmplz-hidden').removeClass('cmplz-hidden');
 					$('.cmplz-create-page-title').each(function(){
 						$(this).removeClass('cmplz-deleted-page').addClass('cmplz-valid-page');
 						$(this).parent().find('.cmplz-icon').replaceWith(response.icon);
 					});
+
+
 					btn.html(response.new_button_text);
 					btn.removeAttr('disabled');
 				} else {
@@ -1057,129 +1070,6 @@ jQuery(document).ready(function ($) {
         $('.cmplz-document-button').attr('href', _href + $(this).val());
     });
 
-	// //chartJS dropdown
-	if ( $('.cmplz-graph-container').length ) {
-		cmplzInitChartJS()
-	}
-
-	$(document).on('change', 'select[name=cmplz_consenttype]', function(){
-		cmplzInitChartJS();
-	});
-
-	$(document).on('change', 'select[name=cmplz_category]', function(){
-		cmplzInitChartJS();
-	});
-
-	function cmplzInitChartJS() {
-		var hasChartData = $('select[name=cmplz_consenttype]').length;
-		var XscaleLabelDisplay = true;
-		var YscaleLabelDisplay = true;
-		var titleDisplay = true;
-		var legend = true;
-		var chartTitle = 'loading....';
-
-		var minimal = $('.cmplz-insights').length;
-		if (minimal) {
-			XscaleLabelDisplay = false;
-			YscaleLabelDisplay = false;
-			titleDisplay = false;
-			legend = false;
-		}
-
-		var config = {
-			type: 'line',
-			data: {
-				labels: ['...', '...', '...', '...', '...', '...', '...'],
-				datasets: [{
-					label: '...',
-					backgroundColor: 'rgb(255, 99, 132)',
-					borderColor: 'rgb(255, 99, 132)',
-					data: [
-						0, 0, 0, 0, 0, 0, 0,
-					],
-					fill: false,
-				}
-
-				]
-			},
-			options: {
-				legend:{
-					display:legend,
-				},
-				responsive: true,
-				title: {
-					display: titleDisplay,
-					text: 'loading....'
-				},
-				tooltips: {
-					mode: 'index',
-					intersect: false,
-				},
-				hover: {
-					mode: 'nearest',
-					intersect: true
-				},
-				scales: {
-					xAxes: [{
-						display: XscaleLabelDisplay,
-						scaleLabel: {
-							display: true,
-							labelString: 'Date'
-						}
-					}],
-					yAxes: [{
-						display: YscaleLabelDisplay,
-						scaleLabel: {
-							display: true,
-							labelString: 'Count'
-						},
-						ticks: {
-							min: 0,
-							max: 1,
-							stepSize: 5
-						}
-					}]
-				}
-			}
-		};
-
-		var ctx = document.getElementsByClassName('cmplz-graph');
-		window.conversionGraph = new Chart(ctx, config);
-		var consenttype = $('select[name=cmplz_consenttype]').val();
-		var category = $('select[name=cmplz_category]').val();
-
-		$.ajax({
-			type: "get",
-			dataType: "json",
-			url: ajaxurl,
-			data: {
-				action: "cmplz_get_graph",
-				consenttype: consenttype,
-				category: category,
-			},
-			success: function (response) {
-				if (response.success == true) {
-					var i = 0;
-					response.data.datasets.forEach(function (dataset) {
-						if (config.data.datasets.hasOwnProperty(i)) {
-							config.data.datasets[i] = dataset;
-						} else {
-							var newDataset = dataset;
-							config.data.datasets.push(newDataset);
-						}
-
-						i++;
-					});
-					config.data.labels = response.data.labels;
-					config.options.title.text = response.title;
-					config.options.scales.yAxes[0].ticks.max = parseInt(response.data.max);
-					window.conversionGraph.update();
-				} else {
-					alert("Your experiment data could not be loaded")
-				}
-			}
-		})
-	}
 
 	/**
 	 * Start export to csv of records of consent
