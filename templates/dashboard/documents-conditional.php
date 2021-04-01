@@ -1,34 +1,35 @@
 <?php defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 $docs = array(
-	array(
+	'privacy-statement' => array(
 		'title' => __("Privacy Statements", "complianz-gdpr"),
 		'regions' => array('eu', 'us', 'uk', 'ca'),
 	),
-	array(
+	'cookie-statement' => array(
 		'title' => __("Cookie Policy", 'complianz-gdpr'),
 		'regions' => array('eu', 'us', 'uk', 'ca'),
 	),
-	array(
+	'impressum' => array(
 		'title' => __("Impressum", 'complianz-gdpr'),
 		'regions' => array('eu'),
 	),
-	array(
+	'do-not-sell-my-info' => array(
 		'title' => __("Do Not Sell My Info", 'complianz-gdpr'),
 		'regions' => array('us'),
 	),
-	array(
+	'privacy-statement-for-children' => array(
 		'title' => __("Privacy Statement for Children", 'complianz-gdpr'),
 		'regions' => array('us', 'uk', 'ca'),
 	),
-	array(
+	'disclaimer' => array(
 		'title' => __("Disclaimer", 'complianz-gdpr'),
 		'regions' => array('eu', 'us', 'uk', 'ca'),
 	),
 );
 
-foreach ($docs as $doc) {
+foreach ($docs as $index => $doc) {
 	if ($doc['title'] == __("Cookie Policy", "complianz-gdpr") || $doc['title'] == __("Impressum", 'complianz-gdpr')) continue;
 	if (array_search($region, $doc['regions']) !== false) {
+
 		$args = array(
 			'status' => 'missing',
 			'title' => $doc['title'],
@@ -51,7 +52,8 @@ $args = array(
 );
 echo cmplz_get_template('dashboard/documents-row.php', $args);
 
-foreach ($docs as $doc) {
+foreach ($docs as $key => $doc) {
+	if ( $key === 'disclaimer') continue;
 	if (($key = array_search($region, $doc['regions'])) !== false) {
 		unset($doc['regions'][$key]);
 		$doc['regions'] = array_values($doc['regions']);

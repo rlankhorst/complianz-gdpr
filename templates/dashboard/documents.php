@@ -74,10 +74,10 @@
 		}
 
 		$title = __("Terms and Conditions",'complianz-gdpr');
+		$status = 'disabled';
+		$shortcode_icon = cmplz_icon( 'shortcode', 'disabled' , __( 'Click to copy the document shortcode', 'complianz-gdpr' ));
 		$sync_icon = cmplz_icon('sync', 'disabled');
 		$page_exists = cmplz_icon('bullet', 'disabled');
-		$shortcode_icon = cmplz_icon('shortcode', 'disabled');
-		$status = "disabled";
 
 		$generated = '<a href="'.add_query_arg( array('s'=>'complianz+terms+conditions+stand-alone', 'tab'=>'search','type'=>'term'),  admin_url('plugin-install.php') ).'">'.__('install', 'complianz-gdpr').'</a>';
 		if (class_exists('COMPLIANZ_TC') ) {
@@ -85,21 +85,18 @@
 			$shortcode = COMPLIANZ_TC::$document->get_shortcode( $force_classic = true );
 			$title = '<a href="' . get_permalink($page_id) . '">' . $title . '</a>';
 			$title .= '<div class="cmplz-selectable cmplz-shortcode" id="'.$type.'">' . $shortcode . '</div>';
-			$sync_icon = cmplz_icon( 'sync', $status );
-			$shortcode_icon = cmplz_icon( 'shortcode', $status , __( 'Click to copy the document shortcode', 'complianz-gdpr' ));
 
 			if ($page_id) {
 				$generated = date( cmplz_short_date_format(), get_option( 'cmplz_tc_documents_update_date', get_option( 'cmplz_documents_update_date' ) ) );
 				$sync_status = COMPLIANZ_TC::$document->syncStatus( $page_id );
-				if ( $sync_status === 'sync' ) {
-					$shortcode_icon = '<span class="cmplz-copy-shortcode">' . $shortcode_icon . '</span>';
-				}
 				$status = $sync_status === 'sync' ? "success" : "disabled";
 				$sync_icon = cmplz_icon( 'sync', $status );
 				$page_exists = cmplz_icon('bullet', 'success');
 			} else {
 				$generated = '<a href="'.add_query_arg( array('page'=>'terms-conditions', 'step'=>3),  admin_url('admin.php') ).'">'.__('create', 'complianz-gdpr').'</a>';
 			}
+			$shortcode_icon = cmplz_icon( 'shortcode', $status , __( 'Click to copy the document shortcode', 'complianz-gdpr' ));
+			$shortcode_icon = '<span class="cmplz-copy-shortcode">' . $shortcode_icon . '</span>';
 		}
 
 		$args = array(
