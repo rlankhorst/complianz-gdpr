@@ -543,9 +543,9 @@ if ( ! class_exists( "cmplz_field" ) ) {
 		public function after_field( $args ) {
 
 			$this->get_comment( $args );
-			echo '</div><!--close in after field-->';
+			echo '</div><!--close after field-->';
 			echo '<div class="cmplz-help-warning-wrap">';
-			if ( isset( $args['help'] ) ) {
+			if (  isset( $args['help'] ) ) {
 				cmplz_sidebar_notice( wp_kses_post( $args['help'] ) );
 			}
 
@@ -969,6 +969,19 @@ if ( ! class_exists( "cmplz_field" ) ) {
                     $custom_page_id = $wp_privacy_policy;
                 }
             }
+			$all_disabled = !is_array($args['disabled']) && $args['disabled'];
+			$generated_disabled = $custom_disabled = $url_disabled = $none_disabled = $all_disabled;
+            if (is_array($args['disabled'])) {
+				$generated_disabled = in_array('generated', $args['disabled']) || $all_disabled ? 'disabled' : '';
+				$custom_disabled = in_array('custom', $args['disabled']) || $all_disabled ? 'disabled' : '';
+				$url_disabled = in_array('url', $args['disabled']) || $all_disabled ? 'disabled' : '';
+				$none_disabled = in_array('url', $args['disabled']) || $all_disabled ? 'disabled' : '';
+			}
+
+			$generated_disabled = $generated_disabled ? 'disabled' : '';
+			$custom_disabled = $custom_disabled ? 'disabled' : '';
+			$url_disabled = $url_disabled ? 'disabled' : '';
+			$none_disabled = $none_disabled ? 'disabled' : '';
 			?>
 
 			<?php do_action( 'complianz_before_label', $args ); ?>
@@ -976,59 +989,48 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			<?php do_action( 'complianz_after_label', $args ); ?>
 
 			<div class="cmplz-document-field" data-fieldname="<?php echo esc_html( $fieldname ) ?>">
-                <?php if ( $args['disabled'] ) echo '<div class="cmplz-not-allowed">'; ?>
-                <label class="cmplz-radio-container <?php echo $disabled ?>"><?php echo $generate_label ?>
+                <label class="cmplz-radio-container <?php echo $generated_disabled ?>"><?php echo $generate_label ?>
                     <input
-						<?php if ( !is_array($args['disabled']) ) {
-							if ($args['disabled']) echo "disabled";
-						} ?>
+						<?php echo $generated_disabled ?>
                         <?php echo $required ?>
                         type="radio"
                         name="<?php echo esc_html( $fieldname ) ?>"
                         value="generated"
                         <?php echo $generated ?>
-                        class="cmplz-document-input"
-                    >
-                    <div class="radiobtn" <?php echo $required ?>><?php echo $check_icon ?></div>
+                        class="cmplz-document-input">
+                    <div class="radiobtn" <?php echo $generated_disabled ?> <?php echo $required ?>><?php echo $check_icon ?></div>
                 </label>
-                <?php if ( $args['disabled'] ) echo '</div>'; // class="cmplz-not-allowed" ?>
 
                 <label class="cmplz-radio-container"><?php echo $custom_label ?>
                     <input
-						<?php if ( !is_array($args['disabled']) ) {
-							if ($args['disabled']) echo "disabled";
-						} ?>
-                        <?php echo $required ?>
+							<?php echo $custom_disabled ?>
+							<?php echo $required ?>
                         type="radio"
                         name="<?php echo esc_html( $fieldname ) ?>"
                         value="custom"
                         <?php echo $custom ?>
                         class="cmplz-document-input"
                     >
-                    <div class="radiobtn" <?php echo $required ?>><?php echo $check_icon ?></div>
+                    <div class="radiobtn <?php echo $custom_disabled ?>" <?php echo $custom_disabled ?> <?php echo $required ?>><?php echo $check_icon ?></div>
                 </label>
 
                 <label class="cmplz-radio-container"><?php echo $url_label ?>
                     <input
-						<?php if ( !is_array($args['disabled']) ) {
-							if ($args['disabled']) echo "disabled";
-						} ?>
-                        <?php echo $required ?>
+						<?php echo $url_disabled ?>
+						<?php echo $required ?>
                         type="radio"
                         name="<?php echo esc_html( $fieldname ) ?>"
                         value="url"
                         <?php echo $url ?>
                         class="cmplz-document-input"
                     >
-                    <div class="radiobtn" <?php echo $required ?>><?php echo $check_icon ?></div>
+                    <div class="radiobtn <?php echo $url_disabled ?>"  <?php echo $required ?>><?php echo $check_icon ?></div>
                 </label>
 
 				<?php if ( $args['fieldname'] !== 'cookie-statement' ){ ?>
                     <label class="cmplz-radio-container"><?php echo $none_label ?>
                         <input
-                        	<?php if ( !is_array($args['disabled']) ) {
-								if ($args['disabled']) echo "disabled";
-							} ?>
+							<?php echo $none_disabled ?>
                             <?php echo $required ?>
                             type="radio"
                             name="<?php echo esc_html( $fieldname ) ?>"
@@ -1036,7 +1038,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
                             <?php echo $none ?>
                             class="cmplz-document-input"
                         >
-                        <div class="radiobtn" <?php echo $required ?>><?php echo $check_icon ?></div>
+                        <div class="radiobtn <?php echo $none_disabled ?>" <?php echo $required ?>><?php echo $check_icon ?></div>
                     </label>
 				<?php } ?>
 
@@ -1545,10 +1547,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			$source, $step = false, $section = false, $get_by_fieldname = false
 		) {
 
-			$fields = COMPLIANZ::$config->fields( $source, $step, $section,
-				$get_by_fieldname );
-
-
+			$fields = COMPLIANZ::$config->fields( $source, $step, $section, $get_by_fieldname );
 			$i = 0;
 			foreach ( $fields as $fieldname => $args ) {
 				if ( $i === 0 ) {
@@ -1667,23 +1666,21 @@ if ( ! class_exists( "cmplz_field" ) ) {
 			do_action( 'complianz_after_field', $args );
 		}
 
-		public
-		function notice(
+		/**
+		 * A notice field is nothing more than an empty field, with a help notice.
+		 *
+		 * @param $args
+		 */
+		public function notice(
 			$args
 		) {
 			if ( ! $this->show_field( $args ) ) {
 				return;
 			}
 			do_action( 'complianz_before_label', $args );
-			do_action( 'complianz_after_label', $args );?>
-			<?php
-			echo '<div class="cmplz-help-warning-wrap">';
-			if ( isset( $args['help'] ) ) {
-				cmplz_sidebar_notice( wp_kses_post( $args['help'] ) );
-			}
-
-			echo '</div>';
-			echo '</div>';
+			do_action( 'complianz_label_html' , $args );
+			do_action( 'complianz_after_label', $args );
+			do_action( 'complianz_after_field', $args );
 		}
 
 		public

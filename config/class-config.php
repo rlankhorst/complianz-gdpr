@@ -440,16 +440,23 @@ if ( ! class_exists( "cmplz_config" ) ) {
 
 		public function load_warning_types() {
 			$this->warning_types = apply_filters('cmplz_warning_types' ,array(
+				'upgraded_to_five' => array(
+					'warning_condition' => 'cmplz_upgraded_to_five',
+					'open' => __( 'Complianz GDPR/CCPA 5.0. Learn more about our newest major release.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/meet-complianz-5-0/'),
+					'plus_one' => true,
+				),
 				'wizard-incomplete'  => array(
 					'warning_condition' => 'wizard->wizard_completed_once',
 					'success_conditions'  => array(
 						'wizard->all_required_fields_completed_wizard'
 					),
 					'completed'    => __( 'The wizard has been completed.', 'complianz-gdpr' ),
-					'open' => __( 'Not all fields have been entered, or you have not clicked the "finish" button yet.', 'complianz-gdpr' )
+					'urgent' => __( 'Not all fields have been entered, or you have not clicked the "finish" button yet.', 'complianz-gdpr' ),
+					'plus_one' => true,
 				),
 
 				'complianz-gdpr-feature-update' => array(
+					'plus_one' => true,
 					'success_conditions' => array(
 						'NOT admin->complianz_plugin_has_new_features' //completed when no new features
 					),
@@ -474,6 +481,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 
 
 				'cookies-changed' => array(
+					'plus_one' => true,
 					'warning_condition' => 'cookie_admin->cookies_changed',
 					'success_conditions'  => array(
 					),
@@ -553,7 +561,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 						'NOT get_option_cmplz_double_stats',
 					),
 					'open' => __( 'You have a duplicate implementation of your statistics tool on your site.', 'complianz-gdpr' ) .
-					          __( 'After the issue has been resolve, please re-run a scan to clear this message.', 'complianz-gdpr' )
+					          __( 'After the issue has been resolved, please re-run a scan to clear this message.', 'complianz-gdpr' )
 					                 . cmplz_read_more( 'https://complianz.io/duplicate-implementation-of-analytics/' ),
 				),
 
@@ -568,7 +576,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				'console-errors' => array(
 					'warning_condition' => 'cookie_admin->site_needs_cookie_warning',
 					'success_conditions'  => array(
-						'NOT get_option_cmplz_detected_console_errors',
+						'NOT cmplz_get_console_errors',
 					),
 					'open' => __( 'Javascript errors are detected on the front-end of your site. This may break the cookie banner functionality.', 'complianz-gdpr' )
 					                 . '<br>'.__("Last error in the console:", "complianz-gdpr")
@@ -598,6 +606,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 					'success_conditions'  => array(
 						'document->pretty_permalinks_enabled',
 					),
+					'plus_one' => true,
 					'urgent' => __( 'Pretty permalinks are not enabled on your site. This can cause issues with the REST API, used by Complianz.', 'complianz-gdpr' ),
 				),
 			)

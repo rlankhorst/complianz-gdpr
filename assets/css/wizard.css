@@ -522,7 +522,6 @@
   /* ----------- Icons ----------- */
   /* ----------- Fields ----------- */
   /* Checkbox */
-  /* Disabled option */
   /* Customize the label (the container) */
   /* Radio */
   /* Customize the label (the container) */
@@ -598,10 +597,6 @@
   width: 12px;
   border-radius: 12px;
   background-color: #d7263d;
-}
-#cmplz-wizard .cmplz-not-allowed,
-#cmplz-settings .cmplz-not-allowed {
-  cursor: not-allowed;
 }
 #cmplz-wizard .cmplz-checkbox-container,
 #cmplz-settings .cmplz-checkbox-container {
@@ -703,6 +698,10 @@
   border-radius: 20px;
   border: 1px solid #dedede;
 }
+#cmplz-wizard .cmplz-radio-container .radiobtn.disabled,
+#cmplz-settings .cmplz-radio-container .radiobtn.disabled {
+  cursor: not-allowed;
+}
 #cmplz-wizard .cmplz-radio-container .radiobtn div,
 #cmplz-settings .cmplz-radio-container .radiobtn div {
   content: "";
@@ -726,16 +725,12 @@
   display: block;
   background-color: #eee;
 }
-#cmplz-wizard .cmplz-radio-container.cmplz-disabled,
-#cmplz-settings .cmplz-radio-container.cmplz-disabled {
-  pointer-events: none;
-}
-#cmplz-wizard .cmplz-radio-container.cmplz-disabled .radiobtn,
-#cmplz-settings .cmplz-radio-container.cmplz-disabled .radiobtn {
+#cmplz-wizard .cmplz-radio-container .radiobtn.disabled,
+#cmplz-settings .cmplz-radio-container .radiobtn.disabled {
   background-color: #eee;
 }
-#cmplz-wizard .cmplz-radio-container.cmplz-disabled .radiobtn .cmplz-icon,
-#cmplz-settings .cmplz-radio-container.cmplz-disabled .radiobtn .cmplz-icon {
+#cmplz-wizard .cmplz-radio-container .radiobtn.disabled .cmplz-icon,
+#cmplz-settings .cmplz-radio-container .radiobtn.disabled .cmplz-icon {
   background-color: #eee !important;
 }
 #cmplz-wizard textarea.validation,

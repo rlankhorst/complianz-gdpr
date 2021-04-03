@@ -13,6 +13,18 @@ if ( ! function_exists( 'cmplz_uses_google_analytics' ) ) {
 	}
 }
 
+if ( ! function_exists( 'cmplz_upgraded_to_five' ) ) {
+
+	/**
+	 * Check if user upgraded to 5.0
+	 * @return bool
+	 */
+
+	function cmplz_upgraded_to_five() {
+		return get_option( 'cmplz_upgraded_to_five' ) ? true : false;
+	}
+}
+
 if ( ! function_exists('cmplz_subscription_type') ) {
     /**
      * Get subscription type
@@ -934,7 +946,7 @@ if (!function_exists('cmplz_get_console_errors')){
 			return sprintf(__('%s on line %s of %s', 'complianz-gdpr'), $errors[0], $errors[1], $location);
 		}
 
-		return '';
+		return false;
 	}
 }
 

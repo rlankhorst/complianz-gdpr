@@ -94,7 +94,7 @@
 		COMPLIANZ::$field->checkbox( $args, $uses_ad_cookies );
 	}
 	?>
-	<input type="hidden" name="cmplz_save_integrations_type" value="services">
+	<input type="hidden" name="cmplz_save_integrations_type_services" value="1">
 
 
 

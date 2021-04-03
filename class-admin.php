@@ -232,6 +232,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 		}
 
 		public function check_upgrade() {
+
 			//when debug is enabled, a timestamp is appended. We strip this for version comparison purposes.
 			$prev_version = get_option( 'cmplz-current-version', false );
 
@@ -504,6 +505,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			if (  $prev_version
 			      && version_compare( $prev_version, '4.6.0', '<' )
 			) {
+
 				$banners = cmplz_get_cookiebanners();
 				if ( $banners ) {
 					foreach ( $banners as $banner_item ) {
@@ -583,12 +585,16 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			}
 
 			/**
-			 * upgrade to new category field
+			 * upgrade to new cookie banner, and 5.0 message option
 			 */
+
 			if ( $prev_version && version_compare( $prev_version, '5.0.0', '<' ) ) {
+				update_option('cmplz_upgraded_to_five', true);
+
 				//clear notices cache, as the array structure has changed
 				delete_transient( 'complianz_warnings' );
 				global $wpdb;
+
 				$banners = cmplz_get_cookiebanners();
 				if ( $banners ) {
 					foreach ( $banners as $banner_item ) {
@@ -757,30 +763,29 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 		 */
 
 		public function get_warnings( $args = array() ) {
-			//return nothing when notifications disabled
-			if ( cmplz_get_value( 'disable_notifications' ) ) {
-				return array();
-			}
 			$defaults = array(
 				'cache' => true,
 				'status' => 'all',
+				'plus_ones' => false,
 			);
 			$args = wp_parse_args($args, $defaults);
 			$cache = $args['cache'];
 			$warnings = $cache ? get_transient( 'complianz_warnings' ) : false;
-
 			//re-check if there are no warnings, or if the transient has expired
-			if ( ! $warnings || count( $warnings ) > 0 ) {
+			if ( ! $warnings ) {
 				$warning_type_defaults = array(
+					'plus_one' => false,
 					'warning_condition' => '_true_',
 					'success_conditions' => array(),
 					'relation' => 'OR',
+					'status' => 'open',
 				);
 
 				$warning_types = apply_filters( 'cmplz_warnings_types', COMPLIANZ::$config->warning_types );
 				foreach ($warning_types as $id => $warning_type) {
 					$warning_types[$id] = wp_parse_args($warning_type, $warning_type_defaults );
 				}
+
 				$dismissed_warnings = get_option('cmplz_dismissed_warnings', array() );
 				foreach ( $warning_types as $id => $warning ) {
 					if ( in_array( $id, $dismissed_warnings) ) {
@@ -821,21 +826,31 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 						if (isset( $warning['completed']) ) {
 							$warning['message'] = $warning['completed'];
 							$warning['status'] = 'completed';
+							$warning['plus_one'] = false;
 							$warnings[$id] = $warning;
 						}
 					}
-
 				}
 
 				//filter by status
 				if ($args['status'] !== 'all' ) {
 					$filter_statuses = is_array($args['status']) ? $args['status'] : array($args['status']);
 					foreach ($warnings as $id => $warning ) {
-						//only for upgrade from <5.0
-						if ( !isset($warning['status']) ) continue;
-
 						if ( !in_array( $warning['status'], $filter_statuses) ) {
 							unset( $warnings[$id] );
+						}
+					}
+				}
+
+				//filter by plus ones
+				if ($args['plus_ones']) {
+					//if notifications disabled, we return an empty array when the plus ones are requested.
+					if ( cmplz_get_value( 'disable_notifications' ) ) {
+						return array();
+					}
+					foreach ($warnings as $id => $warning ) {
+						if (!$warning['plus_one']){
+							unset($warnings[$id]);
 						}
 					}
 				}
@@ -932,7 +947,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			}
 
 			$warnings = $this->get_warnings( array(
-					'status' => 'urgent',
+					'plus_ones' => true,
 			) );
 			$warning_count = count( $warnings );
 			$warning_title = esc_attr( sprintf( '%d plugin warnings', $warning_count ) );
@@ -1085,7 +1100,9 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 						'header' => __("Other plugins", "complianz-gdpr"),
 						'class' => 'half-height',
 						'page' => 'dashboard',
-						'controls' => '<a href="https://really-simple-plugins.com/" target="_blank"><img src="'.cmplz_url.'/assets/images/really-simple-plugins.png" alt="Really Simple Plugins Logo"></a>',
+						'controls' => '<a href="https://really-simple-plugins.com/" target="_blank">
+										<img src="'.cmplz_url.'/assets/images/really-simple-plugins.svg" alt="Really Simple Plugins">
+										</a>',
 					),
 
 					array(
@@ -1181,7 +1198,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
                 'cookie-blocker' => array(
                     'page' => 'settings',
                     'name' => 'cookie-blocker',
-                    'header' => __('Cookie Blocker', 'complianz-gdpr'),
+                    'header' => __('Cookie blocker', 'complianz-gdpr'),
                     'class' => 'medium',
                     'index' => '13',
                     'controls' => '',

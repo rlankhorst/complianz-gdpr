@@ -621,7 +621,6 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
-
 			//don't archive the last one
 			if ( count( cmplz_get_cookiebanners() ) === 1 ) {
 				return;

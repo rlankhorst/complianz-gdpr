@@ -277,6 +277,7 @@ jQuery(document).ready(function ($) {
 
 	function cmplz_show_save_settings_feedback(e){
 		if (typeof e !== 'undefined' && e.target.type === 'submit') return;
+		if (typeof e !== 'undefined' && e.target.name === 'cmplz_type') return;
 
 		if ( $('.cmplz-save-settings').length ) {
 			$('.cmplz-notification.cmplz-success').closest('.cmplz-panel-wrap').hide();

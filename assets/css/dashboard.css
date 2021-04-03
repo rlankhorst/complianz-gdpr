@@ -2,6 +2,13 @@
 #cmplz_selected_region {
   font-size: 13px;
 }
+.cmplz-plusone {
+  border-radius: 50%;
+  background-color: #D7263D;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 10px;
+}
 .cmplz-bullet {
   height: 13px;
   width: 13px;

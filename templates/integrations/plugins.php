@@ -10,6 +10,6 @@
 		cmplz_settings_overlay( __( 'No active plugins detected in the integrations list.', 'complianz-gdpr' ) );
 	}
 	?>
-	<input type="hidden" name="cmplz_save_integrations_type" value="plugins">
+	<input type="hidden" name="cmplz_save_integrations_type_plugins" value="1">
 	<?php
 	COMPLIANZ::$field->get_fields( 'integrations' );

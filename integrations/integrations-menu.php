@@ -61,12 +61,13 @@ function process_integrations_services_save() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	if ( isset( $_POST['cmplz_save_integrations_type'] ) ) {
+	if ( isset( $_POST['cmplz_save_integrations_type_plugins'] ) || isset($_POST["cmplz_save_integrations_type_services"]) ) {
 		if ( ! isset( $_POST['cmplz_nonce'] ) || ! wp_verify_nonce( $_POST['cmplz_nonce'], 'complianz_save' ) ) {
 			return;
 		}
 
-		if ( $_POST["cmplz_save_integrations_type"] === 'services' ) {
+		if ( isset($_POST["cmplz_save_integrations_type_services"])    ) {
+
 			$thirdparty_services = COMPLIANZ::$config->thirdparty_services;
 			unset( $thirdparty_services['google-fonts'] );
 
@@ -82,7 +83,6 @@ function process_integrations_services_save() {
 			}
 
 			cmplz_update_option( 'wizard', 'thirdparty_services_on_site', $active_services );
-
 			$socialmedia        = COMPLIANZ::$config->thirdparty_socialmedia;
 			$active_socialmedia = cmplz_get_value( 'socialmedia_on_site' );
 			foreach ( $socialmedia as $service => $label ) {

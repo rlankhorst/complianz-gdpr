@@ -674,10 +674,7 @@
 
   /* Checkbox */
 
-  /* Disabled option */
-  .cmplz-not-allowed {
-    cursor: not-allowed;
-  }
+
 
   /* Customize the label (the container) */
   .cmplz-checkbox-container {
@@ -774,6 +771,9 @@
       width: 20px;
       border-radius: 20px;
       border: 1px solid @input-border-color;
+	  &.disabled {
+		cursor: not-allowed;
+	  }
     }
 
     /* Check icon (hidden when not checked) */
@@ -804,15 +804,14 @@
     }
 
     /* Disabled option */
-    &.cmplz-disabled {
-      pointer-events: none;
-      .radiobtn {
+
+      .radiobtn.disabled {
         background-color: #eee;
         .cmplz-icon {
           background-color: #eee !important;
         }
       }
-    }
+
   }
 
   /* Text & Email Validation */

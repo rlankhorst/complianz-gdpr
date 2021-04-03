@@ -21,7 +21,9 @@ jQuery(document).ready(function ($) {
 				btn.removeAttr('disabled');
 				if (response.success) {
 					container.remove();
-					$('.cmplz-task-count.cmplz-remaining').html(task_count-1)
+					var remainingContainer = $('.cmplz-task-count.cmplz-remaining');
+					var curValue = parseInt( remainingContainer.html() );
+					remainingContainer.html(curValue-1)
 				}
 			}
 		});
@@ -46,7 +48,6 @@ jQuery(document).ready(function ($) {
 			dataType: 'json',
 			data: data,
 			success: function (response) {
-				console.log(response);
 				if (response.success) {
 					container.html(response.html);
 				}
@@ -94,7 +95,7 @@ jQuery(document).ready(function ($) {
 
 	// Color bullet in support forum block
 	$(".cmplz-trick a").hover(function() {
-		$(this).find('.cmplz-bullet').css("background-color","#FBC43D");
+		$(this).find('.cmplz-bullet').css("background-color","#29b6f6");
 	}, function() {
 		$(this).find('.cmplz-bullet').css("background-color",""); //to remove property set it to ''
 	});

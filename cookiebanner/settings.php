@@ -110,6 +110,18 @@ function cmplz_add_cookiebanner_settings($fields){
                 'default' => false,
             ),
 
+			'default' => array(
+				'source'             => 'CMPLZ_COOKIEBANNER',
+				'step'               => 'general',
+				'type'               => 'checkbox',
+				'label'              => __( "Default cookie banner", 'complianz-gdpr' ),
+				'help'               => __( 'When enabled, this is the cookie banner that is used for all visitors. Enabling it will disable this setting on the current default banner. Disabling it will enable randomly a different default banner.',
+					'complianz-gdpr' ),
+
+				'default'            => false,
+				'callback_condition' => 'cmplz_ab_testing_enabled',
+			),
+
             'hide_preview' => array(
                 'source'  => 'CMPLZ_COOKIEBANNER',
                 'step'    => 'general',
@@ -124,6 +136,7 @@ function cmplz_add_cookiebanner_settings($fields){
                 'type'    => 'checkbox',
                 'label'   => __( "Use Custom CSS", 'complianz-gdpr' ),
                 'default' => false,
+                'comment'   => __("The custom CSS editor will appear at the bottom of this page when enabled.","complianz-gdpr"),
             ),
 
             /* ----- Appearance ----- */
@@ -226,18 +239,7 @@ function cmplz_add_cookiebanner_settings($fields){
                 'default' => true,
             ),
 
-			'default' => array(
-				'source'             => 'CMPLZ_COOKIEBANNER',
-				'step'               => 'general',
-				'type'               => 'checkbox',
-				'label'              => __( "Default cookie banner", 'complianz-gdpr' ),
-				'help'               => __( 'When enabled, this is the cookie banner that is used for all visitors. Enabling it will disable this setting on the current default banner. Disabling it will enable randomly a different default banner.',
-					'complianz-gdpr' ),
 
-				'default'            => false,
-				//setting this to true will set it always to true, as the get_cookie settings will see an empty value
-				'callback_condition' => 'cmplz_ab_testing_enabled',
-			),
 
             /* ----- Customization ----- */
             'colorpalette_background' => array(
@@ -436,7 +438,7 @@ function cmplz_add_cookiebanner_settings($fields){
 				'step'      => 'custom_css',
 				'type'      => 'css',
 				'help'      => sprintf(__('You can add additional custom CSS here. For tips and CSS lessons, check out our %sdocumentation%s', 'complianz-gdpr'), '<a target="_blank" href="https://complianz.io/?s=css">', '</a>'),
-				'label'     => __( "Custom CSS", 'complianz-gdpr' ),
+				'label'     => '',
 				'default'   => '.cc-message{}'
 				               . "\n".' /* styles for the message box */'
 				               . "\n"

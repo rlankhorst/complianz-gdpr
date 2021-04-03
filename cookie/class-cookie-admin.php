@@ -72,6 +72,10 @@ if ( ! class_exists( "cmplz_cookie_admin" ) ) {
 			return self::$_this;
 		}
 
+		public function has_console_error(){
+
+		}
+
 		/**
 		 * Front end javascript error detection.
 		 * Only for site admins

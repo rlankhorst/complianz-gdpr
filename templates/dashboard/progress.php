@@ -35,10 +35,13 @@
 				$warning_args['status'] = array('urgent', 'open');
 			}
 			$warnings = COMPLIANZ::$admin->get_warnings($warning_args);
-
+			if (count($warnings) == 0 ){ ?>
+				<?php //success message here?>
+			<?php }
 			$status_message = '';
 			foreach ( $warnings as $id => $warning) {
 				$status = $warning['status'];
+				$plus_one = $warning['plus_one'];
 				if ( $status === 'completed' ) {
 					$status_message = __("Completed", 'complianz-gdpr');
 				}
@@ -53,7 +56,12 @@
 					<div class="cmplz-progress-status-container">
 						<span class="cmplz-progress-status cmplz-<?php echo $status?>"><?php echo $status_message?></span>
 					</div>
-					<div><?php echo $warning['message'] ?></div>
+					<div>
+						<?php echo $warning['message'] ?>
+						<?php if ( $plus_one ) { ?>
+							<span class="cmplz-plusone">1</span>
+						<?php } ?>
+					</div>
 					<div>
 						<?php if ( $status === 'open' ) { ?>
 						<button type="button" class="cmplz-dismiss-warning" data-warning_id="<?php echo $id?>">

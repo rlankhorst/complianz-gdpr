@@ -14,7 +14,7 @@ $this->steps = apply_filters('cmplz_steps',array(
 				               _x('There are a few things to assist you during configuration:','intro first step', 'complianz-gdpr') .'<ul>'.
 				               '<li>' . _x('Hover over the question mark behind certain questions for more information.', 'intro first step', 'complianz-gdpr').'</li>' .
 		                   '<li>' . _x('Important notices and relevant articles are shown in the right column.', 'intro first step', 'complianz-gdpr').'</li>' .
-		                   '<li>' . sprintf(_x('Our %sinstructions manual%s contains more detailed background information about every section and question in the wizard, if you need more information','intro first step', 'complianz-gdpr'),'<a target="_blank" href="https://complianz.io/manual">', '</a>') .'</li>' .
+		                   '<li>' . sprintf(_x('Our %sinstructions manual%s contains more detailed background information about every section and question in the wizard.','intro first step', 'complianz-gdpr'),'<a target="_blank" href="https://complianz.io/manual">', '</a>') .'</li>' .
 		                   '<li>' . sprintf(_x('You can always %slog a support ticket%s if you need further assistance.','intro first step', 'complianz-gdpr'),'<a target="_blank" href="https://wordpress.org/support/plugin/complianz-gdpr/">', '</a>') .'</li></ul>',
 
 			    ),
@@ -57,9 +57,8 @@ $this->steps = apply_filters('cmplz_steps',array(
 					1 => array(
 						'title' => __( 'Cookie scan', 'complianz-gdpr' ),
 						'intro' =>
-                            '<p>'._x( 'Complianz will scan several pages of your website for first-party cookies and known third-party scripts. The scan will be recurring monthly to keep you up-to-date!',
-								'intro scan', 'complianz-gdpr' ) . '&nbsp;' .
-                                  _x( 'For more information, ', 'complianz-gdpr').'<a href="https://complianz.io/cookie-scan-results/" target="_blank">'. _x('read our 5 tips about the cookie scan.', 'complianz-gdpr').'</a></p>',
+                            '<p>'.__( 'Complianz will scan several pages of your website for first-party cookies and known third-party scripts. The scan will be recurring monthly to keep you up-to-date!', 'complianz-gdpr' ) . '&nbsp;' .
+                                  sprintf( __( 'For more information, %sread our 5 tips%s about the cookie scan.', 'complianz-gdpr'), '<a href="https://complianz.io/cookie-scan-results/" target="_blank">','</a>').'</p>',
 					),
 					2 => array(
 						'title' => __( 'Statistics', 'complianz-gdpr' ),
@@ -74,9 +73,13 @@ $this->steps = apply_filters('cmplz_steps',array(
 
 					5 => array(
 						'title' => __( 'Cookie descriptions', 'complianz-gdpr' ),
-						'intro' => '<p>'.sprintf(_x( 'Complianz provides your Cookie Policy with comprehensive cookie descriptions, supplied by cookie database.org. We connect to this open-source database using an external API, which sends the results of the cookiescan (a list of found cookies, used plugins and your domain) to cookie database.org, for the sole purpose of providing you with accurate descriptions and keeping them up-to-date at a weekly schedule. For more information, please read %sthis article%s.',
-                                    'complianz-gdpr' ).'</p>',
-                                    '<a href="https://complianz.io/our-cookiedatabase-a-new-initiative/">', '</a>' )
+						'intro' => '<p>'
+						           .__( 'Complianz provides your Cookie Policy with comprehensive cookie descriptions, supplied by cookiedatabase.org.','complianz-gdpr')
+						           ."&nbsp;"
+						           . __('We connect to this open-source database using an external API, which sends the results of the cookiescan (a list of found cookies, used plugins and your domain) to cookiedatabase.org, for the sole purpose of providing you with accurate descriptions and keeping them up-to-date at a weekly schedule.','complianz-gdpr')
+					                .cmplz_read_more("https://complianz.io/our-cookiedatabase-a-new-initiative/")
+						           .'</p>',
+
 					),
 					6 => array(
 						'title' => __( 'Service descriptions', 'complianz-gdpr' ),

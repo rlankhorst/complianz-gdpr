@@ -38,6 +38,7 @@
 		</div>
 	</div>
 
+	<?php if ( class_exists( 'WooCommerce' ) ) { ?>
 	<div class="cmplz-tools-row">
 		<div><?php _e( "Webshop privacy", 'complianz-gdpr' ); ?></div>
 		<div>
@@ -46,6 +47,7 @@
 			</a>
 		</div>
 	</div>
+	<?php } ?>
 
 <?php
 require_once( apply_filters('cmplz_free_templates_path', cmplz_path . 'templates/' ) .'dashboard/tools-conditional.php');
