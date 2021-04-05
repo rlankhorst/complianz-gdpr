@@ -32,6 +32,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				"addtoany"         => 'AddToAny',
 				"sharethis"        => 'ShareThis',
 				"livechat"         => 'LiveChat',
+				"hubspot"          => 'HubSpot',
 				"calendly"         => 'Calendly',
 			);
 
@@ -141,6 +142,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				"addtoany"          => array( 'addtoany.min.js', 'window.a2a_config' ),
 				"sharethis"        => array( 'sharethis.com' ),
 				"livechat"         => array( 'cdn.livechatinc.com/tracking.js' ),
+				"hubspot"         => array( 'js.hs-scripts.com/', 'hbspt.forms.create', 'js.hsforms.net' ),
 				"calendly"         => array( 'assets.calendly.com' ),
 			);
 

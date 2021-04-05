@@ -544,6 +544,19 @@ $this->fields = $this->fields + array(
 				'complianz-gdpr' ),
 		),
 
+		'block_hubspot_service' => array(
+		'step'      => STEP_COOKIES,
+		'section'   => 4,
+		'source'    => 'wizard',
+		'type'      => 'radio',
+		'options'   => $this->yes_no,
+		'default'   => 'no',
+		'condition' => array( 'thirdparty_services_on_site' => 'hubspot' ),
+		'label'     => __( "Complianz integrates with the consent module of HubSpot. Did you enable the consent module in your HubSpot account?",
+			'complianz-gdpr' ) . cmplz_read_more( 'https://complianz.io/hubspot-integration/' ),
+
+	),
+
 		'hotjar_privacyfriendly' => array(
 			'step'                    => STEP_COOKIES,
 			'section'                 => 4,
