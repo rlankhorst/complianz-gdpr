@@ -738,7 +738,7 @@
   text-transform: initial;
   cursor: pointer;
   position: absolute !important;
-  width: 50%;
+  width: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -757,4 +757,3 @@
 .cmplz-blocked-content-container .cmplz-blocked-content-notice:focus {
   border: 1px dotted #cecece;
 }
-/*# sourceMappingURL=cookieconsent.css.map */

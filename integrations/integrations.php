@@ -23,6 +23,13 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'firstparty_marketing' => false,
 	),
 
+	'wp-video-lightbox' => array(
+			'constant_or_function' => 'WP_VIDEO_LIGHTBOX_VERSION',
+			'label'                => 'WP Video Lightbox',
+			'firstparty_marketing' => false,
+	),
+
+
 //	'ultimate-addons-elementor' => array(
 //			'constant_or_function' => 'UAEL_FILE',
 //			'label'                => 'Ultimate Addons for Elementor',
@@ -34,6 +41,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'label'                => 'Google Invisible reCaptcha voor WordPress',
 			'firstparty_marketing' => false,
 	),
+
+  'easy-fancybox' => array(
+	 	  'constant_or_function' => 'EASY_FANCYBOX_VERSION',
+		  'label'                => 'Easy FancyBox',
+		  'firstparty_marketing' => false,
+  ),
 
 	'novo-map' => array(
 			'constant_or_function' => 'NOVO_MAP_VERSION',
@@ -134,6 +147,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 		'constant_or_function' => 'PYS_FREE_VERSION',
 		'label'                => 'PixelYourSite',
 		'firstparty_marketing' => false,
+	),
+
+	'pixelyoursite-pro'     => array(
+			'constant_or_function' => 'PYS_VERSION',
+			'label'                => 'PixelYourSite Pro',
+			'firstparty_marketing' => false,
 	),
 
 	'user-registration' => array(

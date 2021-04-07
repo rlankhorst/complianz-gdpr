@@ -119,6 +119,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 		public $readmore_privacy;
 		public $readmore_impressum;
 		public $tagmanager_categories;
+		public $tagmanager_categories_x;
 		public $save_preferences;
 		public $accept_all;
 		public $view_preferences;
@@ -308,8 +309,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				$this->use_categories = ! empty( $cookiebanner->use_categories )
 					? $cookiebanner->use_categories
 					: $this->get_default( 'use_categories' );
-				$this->tagmanager_categories
-				                      = ! empty( $cookiebanner->tagmanager_categories )
+				$this->tagmanager_categories = ! empty( $cookiebanner->tagmanager_categories )
 					? $cookiebanner->tagmanager_categories
 					: $this->get_default( 'tagmanager_categories' );
 
@@ -482,7 +482,9 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				$this->readmore_impressum_x
 					= $this->translate( $this->readmore_impressum,
 					'readmore_impressum' );
-
+				$this->tagmanager_categories_x
+					= $this->translate( $this->tagmanager_categories,
+					'tagmanager_categories' );
 				$this->statistics = unserialize( $cookiebanner->statistics );
 
 				/**
@@ -641,6 +643,8 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				'readmore_privacy' );
 			$this->register_translation( $this->readmore_impressum,
 				'readmore_impressum' );
+			$this->register_translation( $this->tagmanager_categories,
+				'tagmanager_categories' );
 
 			/**
 			 * If Tag manager fires categories, enable use categories by default
@@ -886,7 +890,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 			}
 
 			if ( COMPLIANZ::$cookie_admin->tagmamanager_fires_scripts() ) {
-				$tm_cats = explode( ',', $this->tagmanager_categories );
+				$tm_cats = explode( ',', $this->tagmanager_categories_x );
 				foreach ( $tm_cats as $i => $tm_category ) {
 					if ( $i > 1 ) continue;
 					if ( empty( $tm_category ) ) {
@@ -1127,7 +1131,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 				if ( $use_cats) {
 
 					if ( COMPLIANZ::$cookie_admin->tagmamanager_fires_scripts() ) {
-						$categories = explode( ',', $this->tagmanager_categories );
+						$categories = explode( ',', $this->tagmanager_categories_x );
 						foreach ( $categories as $i => $category ) {
 							if ( empty( $category ) ) {
 								continue;
@@ -1273,7 +1277,7 @@ if ( ! class_exists( "cmplz_cookiebanner" ) ) {
 
 				if ( COMPLIANZ::$cookie_admin->tagmamanager_fires_scripts() ) {
 					$output['tm_categories'] = true;
-					$categories = explode( ',', $this->tagmanager_categories );
+					$categories = explode( ',', $this->tagmanager_categories_x );
 					$output['cat_num']    = count( $categories );
 				}
 				$output['view_preferences'] = $this->view_preferences_x;
