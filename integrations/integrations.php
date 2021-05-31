@@ -47,6 +47,12 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'firstparty_marketing' => false,
 	),
 
+	'woocommerce-square' => array(
+			'constant_or_function' => 'wc_square',
+			'label'                => 'WooCommerce Square',
+			'firstparty_marketing' => false,
+	),
+
 	'ultimate-addons-elementor' => array(
 			'constant_or_function' => 'UAEL_FILE',
 			'label'                => 'Ultimate Addons for Elementor',
@@ -171,7 +177,7 @@ $cmplz_integrations_list = apply_filters( 'cmplz_integrations', array(
 			'label'                => 'PixelYourSite Pro',
 			'firstparty_marketing' => false,
 	),
-	
+
 	'pixelyoursite-pinterest'     => array(
 			'constant_or_function' => 'PYS_PINTEREST_VERSION',
 			'label'                => 'PixelYourSite Pinterest',
