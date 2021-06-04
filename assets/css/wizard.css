@@ -656,7 +656,7 @@
   height: 20px;
   width: 20px;
   border-radius: 5px;
-  border: 1px solid #dedede;
+  border: 1px solid #333!important;
 }
 #cmplz-wizard .cmplz-checkbox-container .checkmark svg,
 #cmplz-settings .cmplz-checkbox-container .checkmark svg {
@@ -725,7 +725,7 @@
   height: 20px;
   width: 20px;
   border-radius: 20px;
-  border: 1px solid #dedede;
+  border: 1px solid #333!important;
 }
 #cmplz-wizard .cmplz-radio-container .radiobtn.disabled,
 #cmplz-settings .cmplz-radio-container .radiobtn.disabled {
@@ -846,23 +846,23 @@
 }
 #cmplz-wizard ::placeholder,
 #cmplz-settings ::placeholder {
-  color: #eeeeee;
+  color: blue!important;
 }
 #cmplz-wizard ::placeholder,
 #cmplz-settings ::placeholder {
-  color: #eeeeee;
+  color: blue!important;
 }
 #cmplz-wizard ::-moz-placeholder,
 #cmplz-settings ::-moz-placeholder {
-  color: #eeeeee;
+  color: blue!important;
 }
 #cmplz-wizard :-ms-input-placeholder,
 #cmplz-settings :-ms-input-placeholder {
-  color: #eeeeee;
+  color:blue!important;
 }
 #cmplz-wizard :-moz-placeholder,
 #cmplz-settings :-moz-placeholder {
-  color: #eeeeee;
+  color: blue!important;
 }
 .cmplz-multiple-field-button-footer {
   display: flex;
@@ -1004,7 +1004,7 @@ a.button.cmplz-open-modal {
   font-size: 13px !important;
   color: #383d41;
   background-color: #F2F2F2;
-  border: 1px solid #dedede;
+  border: 1px solid #333!important;
   padding: 10px 15px;
   border-radius: 0;
   margin: 0;
@@ -1077,7 +1077,7 @@ a.button.cmplz-open-modal {
 .cmplz-panel .cmplz-panel-content {
   display: none;
   background-color: #fff;
-  border: 1px solid #dedede;
+  border: 1px solid #333!important;
   border-top: 0;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -1568,13 +1568,13 @@ html .mceContentBody {
 .cmplz-field input[type="number"],
 .cmplz-field input[type="password"] {
   max-width: 500px;
-  border-color: #dedede;
+  border-color: #333!important;
 }
 .cmplz-field input[type="text"]:focus,
 .cmplz-field input[type="email"]:focus,
 .cmplz-field input[type="number"]:focus,
 .cmplz-field input[type="password"]:focus {
-  border-color: initial;
+  border-color: #333!important;
 }
 .cmplz-field input[type="text"],
 .cmplz-field input[type="email"],
@@ -1584,13 +1584,13 @@ html .mceContentBody {
   width: 100%;
 }
 .cmplz-field select {
-  border-color: #F1F1F1;
+  border-color: #333!important;
   vertical-align: initial;
 }
 .cmplz-field textarea.validation:invalid,
 .cmplz-field textarea.validation:valid {
   background-position: 0.5% 1.5%;
-  border-color: #dedede;
+  border-color: #333!important;
 }
 .cmplz-field textarea {
   min-height: 150px;
