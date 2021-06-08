@@ -13,6 +13,19 @@ function cmplz_monsterinsights_set_default( $value, $fieldname ) {
 
 	return $value;
 }
+/**
+ * Add conditional classes to the monsterinsights statistics script
+ *
+ * */
+
+function cmplz_monsterinsights_add_monsterinsights_attributes( $attr ) {
+	$classes       = COMPLIANZ::$cookie_admin->get_statistics_script_classes();
+	$attr['class'] = implode( ' ', $classes );
+
+	return $attr;
+}
+
+add_filter( 'monsterinsights_tracking_analytics_script_attributes', 'cmplz_monsterinsights_add_monsterinsights_attributes', 10, 1 );
 
 /**
  * Block all premium scripts as well
@@ -21,6 +34,7 @@ function cmplz_monsterinsights_set_default( $value, $fieldname ) {
 function cmplz_monsterinsights_script( $tags ) {
 	$tags[] = 'monsterinsights_scroll_tracking_load';
 	$tags[] = 'google-analytics-premium/pro/assets/';
+	$tags[] = 'mi_version';
 	return $tags;
 }
 add_filter( 'cmplz_known_script_tags', 'cmplz_monsterinsights_script' );
@@ -49,21 +63,6 @@ function cmplz_monsterinsights_show_compile_statistics_notice( $args ) {
 
 add_action( 'cmplz_notice_compile_statistics',
 	'cmplz_monsterinsights_show_compile_statistics_notice', 10, 1 );
-
-/**
- * Add conditional classes to the monsterinsights statistics script
- *
- * */
-
-function cmplz_monsterinsights_add_monsterinsights_attributes( $attr ) {
-	$classes       = COMPLIANZ::$cookie_admin->get_statistics_script_classes();
-	$attr['class'] = implode( ' ', $classes );
-
-	return $attr;
-}
-
-add_filter( 'monsterinsights_tracking_analytics_script_attributes', 'cmplz_monsterinsights_add_monsterinsights_attributes', 10, 1 );
-
 
 function cmplz_monsterinsights_compile_statistics_notice() {
 	if ( cmplz_no_ip_addresses() ) {
