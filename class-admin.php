@@ -390,8 +390,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			if ( $prev_version
 			     && version_compare( $prev_version, '4.0.4', '<' )
 			) {
-				$selected_stat_service
-					= cmplz_get_value( 'compile_statistics' );
+				$selected_stat_service = cmplz_get_value( 'compile_statistics' );
 				if ( $selected_stat_service === 'google-analytics'
 				     || $selected_stat_service === 'matomo'
 				     || $selected_stat_service === 'google-tag-manager'
@@ -400,8 +399,7 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 						= COMPLIANZ::$cookie_admin->convert_slug_to_name( $selected_stat_service );
 
 					//check if we have ohter types of this service, to prevent double services here.
-					$service_anonymized = new CMPLZ_SERVICE( $service_name
-					                                         . ' (anonymized)' );
+					$service_anonymized = new CMPLZ_SERVICE( $service_name . ' (anonymized)' );
 					$service            = new CMPLZ_SERVICE( $service_name );
 
 					//check if we have two service types. If so, just delete the anonymized one
@@ -704,8 +702,25 @@ if ( ! class_exists( "cmplz_admin" ) ) {
 			}
 
 			if ( $prev_version && version_compare( $prev_version, '5.1.0', '<' ) ) {
-				error_log("run upgrade");
 				update_option( 'cmplz_first_version', '5.0.0');
+			}
+
+			/**
+			 * restore dropshadow in TCF banner.
+			 */
+			if (  $prev_version
+				  && version_compare( $prev_version, '5.1.2', '<' )
+			) {
+				if ( cmplz_tcf_active() ) {
+					$banners = cmplz_get_cookiebanners();
+					if ( $banners ) {
+						foreach ( $banners as $banner_item ) {
+							$banner = new CMPLZ_COOKIEBANNER( $banner_item->ID, false );
+							$banner->use_box_shadow = true;
+							$banner->save();
+						}
+					}
+				}
 			}
 
 			do_action( 'cmplz_upgrade', $prev_version );

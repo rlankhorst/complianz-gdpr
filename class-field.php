@@ -1788,7 +1788,7 @@ if ( ! class_exists( "cmplz_field" ) ) {
                                    name="<?php echo $args['action'] ?>"
                                    value="<?php _e( 'Import',
                                        'complianz-gdpr' ) ?>">
-			<div class="cmplz-comment"><span class="cmplz-file-chosen"><?php _e("No file chosen", "complianz-gpdr")?></span></div>
+			<div class="cmplz-comment"><span class="cmplz-file-chosen"><?php _e("No file chosen", "complianz-gdpr")?></span></div>
 
             <?php do_action( 'complianz_after_field', $args ); ?>
 

@@ -450,7 +450,7 @@ if ( ! class_exists( "cmplz_config" ) ) {
 				),
 
 				'new_australia' => array(
-					'warning_condition' => 'cmplz_upgraded_to_current',
+					'warning_condition' => 'cmplz_upgraded_to_current_version',
 					'open' => __( 'We have added a new region: Australia. Start the wizard to configure this new region.', 'complianz-gdpr' ).cmplz_read_more('https://complianz.io/australia/'),
 					'plus_one' => true,
 				),

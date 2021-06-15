@@ -25,13 +25,13 @@ if ( ! function_exists( 'cmplz_upgraded_to_five' ) ) {
 	}
 }
 
-if ( !function_exists('cmplz_upgraded_to')){
+if ( !function_exists('cmplz_upgraded_to_current_version')){
 
 	/**
 	 * Check if the user has upgraded to the current version, or if this is a fresh install with this version.
 	 */
 
-	function cmplz_upgraded_to_current() {
+	function cmplz_upgraded_to_current_version() {
 		$first_version = get_option( 'cmplz_first_version' );
 		//if there's no first version yet, we assume it's not upgraded
 		if ( !$first_version ) {
@@ -1730,9 +1730,7 @@ if ( ! function_exists( 'cmplz_used_cookies' ) ) {
 				array_push($allPurposes, $purpose);
 			}
 
-			$service_name = $service->ID && strlen( $service->name ) > 0
-				? $service->name : __( 'Miscellaneous', 'complianz-gdpr' );
-
+			$service_name = $service->ID && strlen( $service->name ) > 0 ? $service->name : __( 'Miscellaneous', 'complianz-gdpr' );
 
 			$sharing = '';
 			if ( $service->sharesData || $service_name === 'Complianz' ) {
