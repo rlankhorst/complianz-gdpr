@@ -615,7 +615,9 @@ if ( ! class_exists( "cmplz_wizard" ) ) {
 
                     $title = COMPLIANZ::$config->steps[ $page ][ $step ]['sections'][ $i ]['title'];
                     $regions = $this->get_section_regions( $page, $step, $i );
-                    $title .= $regions ? ' - ' . implode( ' | ', $regions ) : '';
+                    if (count(cmplz_get_regions()) > count($regions)) {
+	                    $title .= $regions ? ' - ' . implode( ' | ', $regions ) : '';
+                    }
                     $args = array(
 	                    'active' => $active,
 	                    'completed' => $completed,
@@ -631,18 +633,14 @@ if ( ! class_exists( "cmplz_wizard" ) ) {
         }
 
 		public function wizard_content( $page, $step, $section ) {
-
-		    $args['title'] = '';
+			$args = array();
             if (isset(COMPLIANZ::$config->steps[$page][$step]['sections'][$section]['title'])) {
                 $args['title'] = COMPLIANZ::$config->steps[$page][$step]['sections'][$section]['title'];
-                $regions = $this->get_section_regions($page, $step, $section);
-                $args['title'] .= $regions ? ' - ' . implode(' | ', $regions) : '';
             } else {
                 $args['title'] .= COMPLIANZ::$config->steps[$page][$step]['title'];
             }
             $regions = $this->get_section_regions( $page, $step, $section );
             $args['flags'] = cmplz_flag( $regions, false );
-
             $args['save_as_notice'] = '';
             $args['learn_notice'] = '';
             $args['cookie_or_finish_button'] = '';

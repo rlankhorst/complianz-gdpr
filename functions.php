@@ -164,27 +164,6 @@ if ( ! function_exists( 'cmplz_manual_stats_config_possible' ) ) {
 	}
 }
 
-if ( ! function_exists( 'cmplz_complianz_can_configure_stats' ) ) {
-
-	/**
-	 * Checks if the plugin can configure this type of statistics automatically
-	 *
-	 * @return bool
-	 */
-
-	function cmplz_complianz_can_configure_stats() {
-		$stats = cmplz_get_value( 'compile_statistics' );
-		if ( $stats === 'google-analytics' ||
-			 $stats === 'matomo' ||
-			 $stats === 'clicky' ||
-			 $stats === 'google-tag-manager'
-		){
-			return true;
-		}
-		return false;
-	}
-}
-
 if ( ! function_exists( 'cmplz_revoke_link' ) ) {
 	/**
 	 * Output a revoke button
@@ -482,7 +461,7 @@ if ( ! function_exists( 'cmplz_get_region_from_legacy_type' ) ) {
 }
 
 if ( ! function_exists( 'cmplz_get_regions' ) ) {
-	function cmplz_get_regions( $ad_all_category = false ) {
+	function cmplz_get_regions( $ad_all_category = false, $use_full_label = false ) {
 		$regions = cmplz_get_value( 'regions', false, 'wizard' );
 
 		if ( ! is_array( $regions ) && ! empty( $regions ) ) {
@@ -494,8 +473,11 @@ if ( ! function_exists( 'cmplz_get_regions' ) ) {
 				if ( ! $enabled ) {
 					continue;
 				}
-				$label             = isset( COMPLIANZ::$config->regions[ $region ] )
-					? COMPLIANZ::$config->regions[ $region ]['label'] : '';
+				if ($use_full_label) {
+					$label = isset( COMPLIANZ::$config->regions[ $region ] ) ? COMPLIANZ::$config->regions[ $region ]['label_full'] : '';
+				} else {
+					$label = isset( COMPLIANZ::$config->regions[ $region ] ) ? COMPLIANZ::$config->regions[ $region ]['label'] : '';
+				}
 				$output[ $region ] = $label;
 			}
 		}

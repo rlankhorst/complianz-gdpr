@@ -146,16 +146,22 @@
 #cmplz-dashboard .cmplz-document.compact {
   grid-template-columns: 190px auto;
 }
+#cmplz-dashboard .cmplz-document > div:not(:first-child) {
+  margin-left: auto;
+}
+#cmplz-dashboard .cmplz-document.flags {
+  grid-template-columns: 160px auto;
+}
+#cmplz-dashboard .cmplz-document.flags > div:not(:first-child) {
+  margin-left: initial;
+}
+#cmplz-dashboard .cmplz-document.flags .cmplz-flags-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20px, 40px));
+  grid-gap: 0;
+}
 #cmplz-dashboard .cmplz-document h3 {
   margin-bottom: 5px;
-}
-#cmplz-dashboard .cmplz-document > div:nth-child(2),
-#cmplz-dashboard .cmplz-document > div:nth-child(3),
-#cmplz-dashboard .cmplz-document > div:nth-child(4) {
-  margin-left: auto;
-}
-#cmplz-dashboard .cmplz-document > div:last-child {
-  margin-left: auto;
 }
 #cmplz-dashboard .cmplz-document select {
   width: 200px;
